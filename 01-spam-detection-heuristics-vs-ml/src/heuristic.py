@@ -1,6 +1,7 @@
 import re
-from typing import List, Tuple
+from typing import List, Tuple, Dict
 import pandas as pd
+from save_results import save_metrics
 
 
 DEFAULT_THRESHOLD = 2
@@ -58,15 +59,16 @@ def evaluate(y_true: List[str], y_pred: List[str]) -> Tuple[int, int, int, int]:
     return tp, fp, fn, tn
 
 
-def print_metrics(tp: int, fp: int, fn: int, tn: int) -> None:
+def compute_metrics(tp: int, fp: int, fn: int, tn: int) -> Dict:
     accuracy = (tp + tn) / (tp + tn + fp + fn)
     precision = tp / (tp + fp) if (tp + fp) else 0
     recall = tp / (tp + fn) if (tp + fn) else 0
 
-    print("\n=== Heuristic Model Metrics ===")
-    print(f"Accuracy:  {accuracy:.4f}")
-    print(f"Precision: {precision:.4f}")
-    print(f"Recall:    {recall:.4f}")
+    return {
+        "accuracy": round(accuracy, 4),
+        "precision": round(precision, 4),
+        "recall": round(recall, 4),
+    }
 
 
 def run(df: pd.DataFrame) -> None:
@@ -74,4 +76,9 @@ def run(df: pd.DataFrame) -> None:
     y_pred = predict(df)
 
     tp, fp, fn, tn = evaluate(y_true, y_pred)
-    print_metrics(tp, fp, fn, tn)
+    metrics = compute_metrics(tp, fp, fn, tn)
+
+    print("\n=== Heuristic Model Metrics ===")
+    print(metrics)
+
+    save_metrics(metrics, model_name="heuristic", version="v2-scoring")
