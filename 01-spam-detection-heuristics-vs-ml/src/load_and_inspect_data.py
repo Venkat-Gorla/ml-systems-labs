@@ -1,4 +1,5 @@
 import pandas as pd
+from heuristic import run as run_heuristic
 
 
 def load_data(file_path: str) -> pd.DataFrame:
@@ -29,6 +30,8 @@ def main():
     file_path = "data/spam.csv"
     df = load_data(file_path)
     inspect_data(df)
+
+    run_heuristic(df)
 
 
 if __name__ == "__main__":
