@@ -1,6 +1,9 @@
+import re
 from typing import List, Tuple
 import pandas as pd
 
+
+DEFAULT_THRESHOLD = 2
 
 SPAM_KEYWORDS: List[str] = [
     "free", "win", "winner", "offer", "click", "buy",
@@ -8,13 +11,35 @@ SPAM_KEYWORDS: List[str] = [
 ]
 
 
-def is_spam(message: str) -> str:
+def compute_score(message: str) -> int:
     text = message.lower()
-    return "spam" if any(keyword in text for keyword in SPAM_KEYWORDS) else "ham"
+    score = 0
+
+    # keyword match
+    if any(keyword in text for keyword in SPAM_KEYWORDS):
+        score += 1
+
+    # link detection
+    if "http" in text or "www" in text:
+        score += 1
+
+    # numbers (e.g. prizes, phone numbers)
+    if len(re.findall(r"\d+", text)) >= 2:
+        score += 1
+
+    # ALL CAPS words
+    if any(word.isupper() and len(word) > 3 for word in message.split()):
+        score += 1
+
+    return score
 
 
-def predict(df: pd.DataFrame) -> List[str]:
-    return [is_spam(msg) for msg in df["message"]]
+def is_spam(message: str, threshold: int) -> str:
+    return "spam" if compute_score(message) >= threshold else "ham"
+
+
+def predict(df: pd.DataFrame, threshold: int = DEFAULT_THRESHOLD) -> List[str]:
+    return [is_spam(msg, threshold) for msg in df["message"]]
 
 
 def evaluate(y_true: List[str], y_pred: List[str]) -> Tuple[int, int, int, int]:
