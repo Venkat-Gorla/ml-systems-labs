@@ -2,7 +2,8 @@
 name = "01-spam-detection-heuristics-vs-ml"
 version = "0.1.0"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12,<3.13"
 dependencies = [
     "pandas>=3.0.2",
+    "scikit-learn>=1.8.0",
 ]

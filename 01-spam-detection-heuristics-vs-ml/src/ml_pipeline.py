@@ -9,25 +9,25 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
+from load_and_inspect_data import load_data
+from save_results import save_metrics
 
 DATA_PATH = Path("data/spam.csv")
-RESULTS_PATH = Path("results/metrics.json")
-
-
-def load_data() -> pd.DataFrame:
-    return pd.read_csv(DATA_PATH, encoding="latin-1")[["label", "message"]]
 
 
 def split_data(df: pd.DataFrame):
     X = df["message"]
-    y = df["label"].map({"ham": 0, "spam": 1})
+    y = df["label"].str.lower().map({"ham": 0, "spam": 1})
+
+    if y.isnull().any():
+        raise ValueError("Unknown labels found during mapping")
 
     return train_test_split(
         X,
         y,
         test_size=0.2,
         random_state=42,
-        stratify=y,  # critical for imbalance
+        stratify=y,  # keep same spam/ham ratio in train & test
     )
 
 
@@ -57,42 +57,26 @@ def evaluate(y_test, y_pred):
     }
 
 
-def save_results(metrics: dict):
-    record = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
-        "model": "ml",
-        "version": "v1-logistic-regression",
-        "metrics": metrics,
-    }
-
-    if RESULTS_PATH.exists():
-        with open(RESULTS_PATH, "r") as f:
-            data = json.load(f)
-    else:
-        data = []
-
-    data.append(record)
-
-    with open(RESULTS_PATH, "w") as f:
-        json.dump(data, f, indent=2)
+def round_metrics(metrics: dict, decimals: int = 4) -> dict:
+    return {k: round(v, decimals) for k, v in metrics.items()}
 
 
 def main():
-    df = load_data()
+    df = load_data(DATA_PATH)
 
     X_train, X_test, y_train, y_test = split_data(df)
 
     X_train_vec, X_test_vec = vectorize(X_train, X_test)
 
     model = train_model(X_train_vec, y_train)
-
     y_pred = model.predict(X_test_vec)
 
     metrics = evaluate(y_test, y_pred)
+    metrics = round_metrics(metrics)
 
     print("ML Results:", metrics)
 
-    save_results(metrics)
+    save_metrics(metrics, model_name="ml", version="v1-logistic-regression")
 
 
 if __name__ == "__main__":
