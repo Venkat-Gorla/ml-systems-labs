@@ -74,7 +74,8 @@ def main():
     metrics = evaluate(y_test, y_pred)
     metrics = round_metrics(metrics)
 
-    print("ML Results:", metrics)
+    print("=== ML Model Metrics ===")
+    print(metrics)
 
     save_metrics(metrics, model_name="ml", version="v1-logistic-regression")
 

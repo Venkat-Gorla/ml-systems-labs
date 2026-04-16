@@ -1,6 +1,7 @@
 import re
 from typing import List, Tuple, Dict
 import pandas as pd
+from load_and_inspect_data import load_data
 from save_results import save_metrics
 
 
@@ -78,7 +79,18 @@ def run(df: pd.DataFrame) -> None:
     tp, fp, fn, tn = evaluate(y_true, y_pred)
     metrics = compute_metrics(tp, fp, fn, tn)
 
-    print("\n=== Heuristic Model Metrics ===")
+    print("=== Heuristic Model Metrics ===")
     print(metrics)
 
     save_metrics(metrics, model_name="heuristic", version="v2-scoring")
+
+
+def main():
+    file_path = "data/spam.csv"
+    df = load_data(file_path)
+
+    run(df)
+
+
+if __name__ == "__main__":
+    main()
