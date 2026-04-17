@@ -14,6 +14,7 @@ from evaluation.confusion_matrix_eval import (
     evaluate_confusion,
     print_misclassified_examples,
 )
+from evaluation.cross_validation_eval import run_cross_validation
 
 DATA_PATH = Path("data/spam.csv")
 
@@ -64,7 +65,7 @@ def round_metrics(metrics: dict, decimals: int = 4) -> dict:
     return {k: round(v, decimals) for k, v in metrics.items()}
 
 
-def main(save: bool, confusion: bool):
+def main(save: bool, confusion: bool, cv: bool):
     df = load_data(DATA_PATH)
 
     X_train, X_test, y_train, y_test = split_data(df)
@@ -83,6 +84,10 @@ def main(save: bool, confusion: bool):
         evaluate_confusion(y_test, y_pred)
         print_misclassified_examples(X_test, y_test, y_pred)
 
+    if cv:
+        y_full = df["label"].str.lower().map({"ham": 0, "spam": 1})
+        run_cross_validation(df["message"], y_full)
+
     if save:
         save_metrics(
             metrics,
@@ -91,7 +96,7 @@ def main(save: bool, confusion: bool):
         )
 
 
-if __name__ == "__main__":
+def parse_args():
     parser = argparse.ArgumentParser(description="ML Spam Detection Pipeline")
     parser.add_argument(
         "--save",
@@ -105,6 +110,15 @@ if __name__ == "__main__":
         help="Run confusion matrix evaluation",
     )
 
-    args = parser.parse_args()
+    parser.add_argument(
+        "--cv",
+        action="store_true",
+        help="Run cross-validation evaluation",
+    )
 
-    main(save=args.save, confusion=args.confusion)
+    return parser.parse_args()
+
+
+if __name__ == "__main__":
+    args = parse_args()
+    main(save=args.save, confusion=args.confusion, cv=args.cv)
