@@ -1,6 +1,6 @@
 from typing import Dict
 
-import numpy as np
+import numpy
 from sklearn.metrics import confusion_matrix
 
 
@@ -42,11 +42,11 @@ def print_misclassified_examples(
     Print sample false positives and false negatives.
     """
 
-    X = np.array(X)
-    y_true = np.array(y_true)
-    y_pred = np.array(y_pred)
+    X = numpy.array(X)
+    y_true = numpy.array(y_true)
+    y_pred = numpy.array(y_pred)
 
-    mis_idx = np.where(y_true != y_pred)[0]
+    mis_idx = numpy.where(y_true != y_pred)[0]
 
     fp_idx = [i for i in mis_idx if y_true[i] == 0 and y_pred[i] == 1]
     fn_idx = [i for i in mis_idx if y_true[i] == 1 and y_pred[i] == 0]

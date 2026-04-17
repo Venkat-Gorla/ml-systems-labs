@@ -1,4 +1,5 @@
 from pathlib import Path
+import argparse
 
 import pandas as pd
 
@@ -59,11 +60,10 @@ def round_metrics(metrics: dict, decimals: int = 4) -> dict:
     return {k: round(v, decimals) for k, v in metrics.items()}
 
 
-def main():
+def main(save: bool):
     df = load_data(DATA_PATH)
 
     X_train, X_test, y_train, y_test = split_data(df)
-
     X_train_vec, X_test_vec = vectorize(X_train, X_test)
 
     model = train_model(X_train_vec, y_train)
@@ -75,8 +75,22 @@ def main():
     print("=== ML Model Metrics ===")
     print(metrics)
 
-    save_metrics(metrics, model_name="ml", version="v1-logistic-regression")
+    if save:
+        save_metrics(
+            metrics,
+            model_name="ml",
+            version="v1-logistic-regression"
+        )
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser(description="ML Spam Detection Pipeline")
+    parser.add_argument(
+        "--save",
+        action="store_true",
+        help="Persist evaluation metrics",
+    )
+
+    args = parser.parse_args()
+
+    main(save=args.save)
