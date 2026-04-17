@@ -10,6 +10,10 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 from load_and_inspect_data import load_data
 from save_results import save_metrics
+from evaluation.confusion_matrix_eval import (
+    evaluate_confusion,
+    print_misclassified_examples,
+)
 
 DATA_PATH = Path("data/spam.csv")
 
@@ -60,7 +64,7 @@ def round_metrics(metrics: dict, decimals: int = 4) -> dict:
     return {k: round(v, decimals) for k, v in metrics.items()}
 
 
-def main(save: bool):
+def main(save: bool, confusion: bool):
     df = load_data(DATA_PATH)
 
     X_train, X_test, y_train, y_test = split_data(df)
@@ -74,6 +78,10 @@ def main(save: bool):
 
     print("=== ML Model Metrics ===")
     print(metrics)
+
+    if confusion:
+        evaluate_confusion(y_test, y_pred)
+        print_misclassified_examples(X_test, y_test, y_pred)
 
     if save:
         save_metrics(
@@ -91,6 +99,12 @@ if __name__ == "__main__":
         help="Persist evaluation metrics",
     )
 
+    parser.add_argument(
+        "--confusion",
+        action="store_true",
+        help="Run confusion matrix evaluation",
+    )
+
     args = parser.parse_args()
 
-    main(save=args.save)
+    main(save=args.save, confusion=args.confusion)
