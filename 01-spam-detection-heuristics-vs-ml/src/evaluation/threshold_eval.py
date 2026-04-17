@@ -6,6 +6,8 @@ def run_threshold_tuning(model, X_test_vec, y_test):
     """
     Evaluate model performance across different probability thresholds.
     """
+    if isinstance(X_test_vec[0], str):
+        raise TypeError("Expected vectorized input, got raw text")
 
     probs = model.predict_proba(X_test_vec)[:, 1]
 
