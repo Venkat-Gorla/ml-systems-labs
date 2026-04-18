@@ -27,7 +27,7 @@ This POC focuses on:
 
 ### ML Approach
 
-- Lightweight classification model (e.g., Logistic Regression)
+- Logistic Regression with probability-based threshold tuning
 - Text features using basic vectorization (TF-IDF or Bag-of-Words)
 
 ### Comparison Metrics
@@ -35,16 +35,18 @@ This POC focuses on:
 - Accuracy
 - Precision
 - Recall (important for spam detection)
+- F1 Score (balanced metric)
+- Threshold tuning (precision vs recall trade-off)
 
 ## Tech Stack
 
-- **Python**
-  - pandas (data handling)
-  - scikit-learn (modeling + evaluation)
-
-- **AWS (light usage)**
-  - Amazon S3 — dataset storage
-  - Amazon SageMaker — model training
+| Category            | Tools                                             |
+| ------------------- | ------------------------------------------------- |
+| **Language**        | Python                                            |
+| **Data**            | pandas                                            |
+| **ML**              | scikit-learn (Logistic Regression, TF-IDF)        |
+| **Evaluation**      | sklearn metrics (accuracy, precision, recall, F1) |
+| **Cloud (planned)** | AWS S3, SageMaker                                 |
 
 ## Expected Outcome
 
