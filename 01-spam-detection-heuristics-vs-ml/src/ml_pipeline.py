@@ -15,6 +15,7 @@ from evaluation.confusion_matrix_eval import (
     print_misclassified_examples,
 )
 from evaluation.cross_validation_eval import run_cross_validation
+from evaluation.threshold_eval import run_threshold_tuning
 
 DATA_PATH = Path("data/spam.csv")
 
@@ -65,7 +66,7 @@ def round_metrics(metrics: dict, decimals: int = 4) -> dict:
     return {k: round(v, decimals) for k, v in metrics.items()}
 
 
-def main(save: bool, confusion: bool, cv: bool):
+def main(save: bool, confusion: bool, cv: bool, threshold: bool):
     df = load_data(DATA_PATH)
 
     X_train, X_test, y_train, y_test = split_data(df)
@@ -87,6 +88,9 @@ def main(save: bool, confusion: bool, cv: bool):
     if cv:
         y_full = df["label"].str.lower().map({"ham": 0, "spam": 1})
         run_cross_validation(df["message"], y_full)
+
+    if threshold:
+        run_threshold_tuning(model, X_test_vec, y_test)
 
     if save:
         save_metrics(
@@ -116,9 +120,20 @@ def parse_args():
         help="Run cross-validation evaluation",
     )
 
+    parser.add_argument(
+        "--threshold",
+        action="store_true",
+        help="Run threshold tuning evaluation",
+    )
+
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    main(save=args.save, confusion=args.confusion, cv=args.cv)
+    main(
+        save=args.save,
+        confusion=args.confusion,
+        cv=args.cv,
+        threshold=args.threshold
+    )

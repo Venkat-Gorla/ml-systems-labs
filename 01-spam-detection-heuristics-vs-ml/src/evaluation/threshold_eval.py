@@ -26,3 +26,8 @@ def run_threshold_tuning(model, X_test_vec, y_test):
             f"Prec={precision:.4f} | "
             f"Rec={recall:.4f}"
         )
+
+
+# vegorla: integrate this function
+def generate_thresholds(start=0.1, stop=0.9, steps=9):
+    return np.linspace(start, stop, steps)
