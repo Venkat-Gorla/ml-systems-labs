@@ -13,7 +13,7 @@ def run_threshold_tuning(model, X_test_vec, y_test):
 
     print("\n=== Threshold Tuning ===")
 
-    for threshold in np.arange(0.1, 1.0, 0.1):
+    for threshold in generate_thresholds():
         y_pred = (probs >= threshold).astype(int)
 
         accuracy = accuracy_score(y_test, y_pred)
@@ -28,6 +28,5 @@ def run_threshold_tuning(model, X_test_vec, y_test):
         )
 
 
-# vegorla: integrate this function
 def generate_thresholds(start=0.1, stop=0.9, steps=9):
     return np.linspace(start, stop, steps)
