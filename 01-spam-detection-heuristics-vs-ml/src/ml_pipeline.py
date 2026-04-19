@@ -4,15 +4,15 @@ import argparse
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
-from load_and_inspect_data import load_data
-from cloud.features import split_data, vectorize
-from save_results import save_metrics
-from evaluation.confusion_matrix_eval import (
+from src.load_and_inspect_data import load_data
+from src.cloud.features import split_data, vectorize
+from src.save_results import save_metrics
+from src.evaluation.confusion_matrix_eval import (
     evaluate_confusion,
     print_misclassified_examples,
 )
-from evaluation.cross_validation_eval import run_cross_validation
-from evaluation.threshold_eval import run_threshold_tuning
+from src.evaluation.cross_validation_eval import run_cross_validation
+from src.evaluation.threshold_eval import run_threshold_tuning
 
 DATA_PATH = Path("data/spam.csv")
 
