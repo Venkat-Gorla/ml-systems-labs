@@ -1,14 +1,11 @@
 from pathlib import Path
 import argparse
 
-import pandas as pd
-
-from sklearn.model_selection import train_test_split
-from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 from load_and_inspect_data import load_data
+from cloud.features import split_data, vectorize
 from save_results import save_metrics
 from evaluation.confusion_matrix_eval import (
     evaluate_confusion,
@@ -18,34 +15,6 @@ from evaluation.cross_validation_eval import run_cross_validation
 from evaluation.threshold_eval import run_threshold_tuning
 
 DATA_PATH = Path("data/spam.csv")
-
-
-def split_data(df: pd.DataFrame):
-    X = df["message"]
-    y = df["label"].str.lower().map({"ham": 0, "spam": 1})
-
-    if y.isnull().any():
-        raise ValueError("Unknown labels found during mapping")
-
-    return train_test_split(
-        X,
-        y,
-        test_size=0.2,
-        random_state=42,
-        stratify=y,  # keep same spam/ham ratio in train & test
-    )
-
-
-def vectorize(X_train, X_test):
-    vectorizer = TfidfVectorizer(
-        stop_words="english",
-        max_features=5000,
-    )
-
-    X_train_vec = vectorizer.fit_transform(X_train)
-    X_test_vec = vectorizer.transform(X_test)
-
-    return X_train_vec, X_test_vec
 
 
 def train_model(X_train, y_train):
@@ -66,8 +35,9 @@ def round_metrics(metrics: dict, decimals: int = 4) -> dict:
     return {k: round(v, decimals) for k, v in metrics.items()}
 
 
-def main(save: bool, confusion: bool, cv: bool, threshold: bool):
-    df = load_data(DATA_PATH)
+def main(save: bool, confusion: bool, cv: bool, threshold: bool, df=None):
+    if df is None:
+        df = load_data(DATA_PATH)
 
     X_train, X_test, y_train, y_test = split_data(df)
     X_train_vec, X_test_vec = vectorize(X_train, X_test)
