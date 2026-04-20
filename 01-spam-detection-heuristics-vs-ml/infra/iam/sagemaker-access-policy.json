@@ -21,6 +21,23 @@
       ]
     },
     {
+      "Sid": "SageMakerArtifactsAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::sagemaker-*/*"
+      ]
+    },
+    {
+      "Sid": "SageMakerListBuckets",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::sagemaker-*"
+    },
+    {
       "Sid": "LogsAccess",
       "Effect": "Allow",
       "Action": [
