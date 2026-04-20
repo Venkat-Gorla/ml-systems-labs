@@ -28,14 +28,14 @@
         "s3:GetObject"
       ],
       "Resource": [
-        "arn:aws:s3:::sagemaker-*/*"
+        "arn:aws:s3:::sagemaker-ap-south-1-*/*"
       ]
     },
     {
       "Sid": "SageMakerListBuckets",
       "Effect": "Allow",
       "Action": "s3:ListBucket",
-      "Resource": "arn:aws:s3:::sagemaker-*"
+      "Resource": "arn:aws:s3:::sagemaker-ap-south-1-*"
     },
     {
       "Sid": "LogsAccess",
