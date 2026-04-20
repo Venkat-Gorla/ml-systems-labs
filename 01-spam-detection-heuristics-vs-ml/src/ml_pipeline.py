@@ -5,7 +5,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, precision_score, recall_score
 
 from load_and_inspect_data import load_data
-from cloud.features import split_data, vectorize
+from features import split_data, vectorize
 from save_results import save_metrics
 from evaluation.confusion_matrix_eval import (
     evaluate_confusion,
