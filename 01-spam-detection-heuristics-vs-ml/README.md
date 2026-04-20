@@ -40,13 +40,13 @@ This POC focuses on:
 
 ## Tech Stack
 
-| Category            | Tools                                             |
-| ------------------- | ------------------------------------------------- |
-| **Language**        | Python                                            |
-| **Data**            | pandas                                            |
-| **ML**              | scikit-learn (Logistic Regression, TF-IDF)        |
-| **Evaluation**      | sklearn metrics (accuracy, precision, recall, F1) |
-| **Cloud (planned)** | AWS S3, SageMaker                                 |
+| Category       | Tools                                             |
+| -------------- | ------------------------------------------------- |
+| **Language**   | Python                                            |
+| **Data**       | pandas                                            |
+| **ML**         | scikit-learn (Logistic Regression, TF-IDF)        |
+| **Evaluation** | sklearn metrics (accuracy, precision, recall, F1) |
+| **Cloud**      | AWS S3, SageMaker                                 |
 
 ## Expected Outcome
 

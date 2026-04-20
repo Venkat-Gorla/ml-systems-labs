@@ -6,7 +6,6 @@ from ml_pipeline import main
 
 def run():
     data_path = Path("/opt/ml/input/data/train/spam.csv")
-    # data_path = Path("data/spam.csv")
     df = load_data(data_path)
 
     main(
