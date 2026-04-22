@@ -2,60 +2,46 @@
 
 ## Problem
 
-Detect fraudulent transactions in a **highly imbalanced dataset**, where fraud cases are rare.
+Detect fraudulent transactions where:
 
-Traditional evaluation often uses accuracy, but in this scenario:
-
-- Most transactions are legitimate
-- A naive model can achieve high accuracy while being useless
+- Missing fraud (FN) is costly
+- False alarms (FP) are undesirable but cheaper
 
 > **Key question:**
-> **Which metric should we optimize for — accuracy, precision, or recall — given the cost of fraud vs false alarms?**
+> Which metric (accuracy, precision, recall) leads to the best decision given error costs?
 
 ## Goal
 
-- Evaluate **accuracy vs precision/recall**
-- Understand trade-offs between:
-  - Missing fraud (False Negatives)
-  - Incorrectly flagging users (False Positives)
-
-- Introduce **cost-based decision-making**
-- Optimize:
-  - Metric selection
-  - Classification threshold
+- Compare accuracy vs precision/recall
+- Understand FP vs FN trade-offs
+- Evaluate impact of threshold tuning
+- Select optimal decision using cost-based evaluation
 
 ## Validation Approach
 
 ### Baseline
 
 - Predict all transactions as **non-fraud**
-- (Optional) simple heuristic rules (e.g., high transaction amount)
 
-**Why baseline matters:**
+**Purpose:**
 
-- Exposes the **accuracy illusion** in imbalanced data
-- Establishes minimum benchmark
+- Demonstrate accuracy can be misleading
 
-### ML / Advanced Approach
+### ML Approach
 
 - **Model:** Logistic Regression
-- **Features:** Basic numerical features (or preprocessed dataset)
+- **Features:** Basic numerical features
 - **Tuning:**
-  - Probability threshold (e.g., 0.3, 0.5, 0.7)
+  - Threshold (0.1–0.7)
   - Observe precision vs recall trade-off
 
 ## Comparison Metrics
 
-- Accuracy (to demonstrate failure case)
-- Precision (false alarm control)
-- Recall (fraud detection capability)
-- F1 Score (balance)
-- **Cost-based metric (critical):**
-  - Assign cost to:
-    - False Positives (FP)
-    - False Negatives (FN)
-
-  - Compute total system cost
+- Accuracy
+- Precision
+- Recall
+- F1 Score
+- Cost (FP vs FN)
 
 ## Tech Stack
 
@@ -69,14 +55,13 @@ Traditional evaluation often uses accuracy, but in this scenario:
 
 ## Results Summary
 
-- Accuracy can be **misleading in imbalanced datasets**
-- Precision and Recall expose **real model behavior**
-- Threshold tuning significantly impacts outcomes
-- **Cost-based evaluation provides the most practical decision signal**
+- Accuracy can be misleading
+- Precision and recall reveal trade-offs
+- Threshold tuning changes model behavior
+- Cost-based evaluation drives the final decision
 
-**Final decision:**
-
-- Metric selection must align with **business cost of errors**, not just model performance
+**Conclusion:**
+Metric selection must align with business cost, not accuracy
 
 ## Expected Outcome
 
@@ -91,10 +76,10 @@ POC focus:
 - Fast iteration
 - Metric comparison
 - Threshold tuning
-- Cost-based decision-making
+- Cost-based decisions
 
-Not focused on:
+Not covered:
 
 - Complex models
-- Feature engineering depth
-- Production deployment
+- Feature engineering
+- Production systems
