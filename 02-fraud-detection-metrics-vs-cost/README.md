@@ -45,13 +45,13 @@ Detect fraudulent transactions where:
 
 ## Tech Stack
 
-| Category            | Tools            |
-| ------------------- | ---------------- |
-| **Language**        | Python           |
-| **Data**            | pandas           |
-| **ML**              | scikit-learn     |
-| **Evaluation**      | sklearn metrics  |
-| **Cloud (planned)** | None (local POC) |
+| Category       | Tools            |
+| -------------- | ---------------- |
+| **Language**   | Python           |
+| **Data**       | pandas           |
+| **ML**         | scikit-learn     |
+| **Evaluation** | sklearn metrics  |
+| **Cloud**      | None (local POC) |
 
 ## Results Summary
 
