@@ -4,7 +4,6 @@ from sklearn.linear_model import LogisticRegression
 def train_model(X_train, y_train):
     model = LogisticRegression()
 
-    # why: small dataset + possible imbalance
     model.fit(X_train, y_train)
 
     return model
@@ -22,7 +21,7 @@ def predict_proba(model, X):
 
 def test_ml_model():
     from load_data import load_fraud_data
-    from data_ops import split_data, evaluate
+    from data_ops import split_data, evaluate, print_metrics
 
     X, y = load_fraud_data("data/fraud.csv")
     X_train, X_test, y_train, y_test = split_data(X, y)
@@ -33,8 +32,7 @@ def test_ml_model():
     metrics = evaluate(y_test, y_pred)
 
     print("\nML Model Metrics:")
-    for k, v in metrics.items():
-        print(f"{k}: {v}")
+    print_metrics(metrics)
 
     # sanity checks (not strict expectations)
     assert len(y_pred) == len(y_test)

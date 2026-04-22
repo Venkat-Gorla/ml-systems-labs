@@ -13,3 +13,8 @@ def evaluate(y_true, y_pred):
         "recall": recall_score(y_true, y_pred, zero_division=0),
         "f1": f1_score(y_true, y_pred, zero_division=0),
     }
+
+
+def print_metrics(metrics):
+    for k, v in metrics.items():
+        print(f"{k}: {v:.3f}")

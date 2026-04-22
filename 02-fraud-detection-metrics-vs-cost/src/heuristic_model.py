@@ -1,5 +1,5 @@
 from load_data import load_fraud_data
-from data_ops import split_data, evaluate
+from data_ops import split_data, evaluate, print_metrics
 
 
 def baseline_predict(X_test):
@@ -14,8 +14,7 @@ def test_baseline_model():
     metrics = evaluate(y_test, y_pred)
 
     print("\nBaseline Metrics:")
-    for k, v in metrics.items():
-        print(f"{k}: {v}")
+    print_metrics(metrics)
 
     assert metrics["recall"] == 0.0  # baseline misses all fraud
     assert metrics["precision"] == 0.0  # no positive predictions
