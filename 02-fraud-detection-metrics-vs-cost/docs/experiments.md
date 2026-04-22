@@ -54,3 +54,26 @@
 - Higher threshold → lower recall, fewer alerts
 - Model probabilities are clustered → some thresholds behave identically
 - Dataset design directly impacts what ML insights are observable
+
+## Decision Context
+
+- Business assumption: missing fraud (FN) is much more costly than false alerts (FP)
+- Therefore, recall is more important than precision in this scenario
+
+## Final Decision (Cost-Based)
+
+- cost_fp = 1
+- cost_fn = 10
+
+| Threshold | FP  | FN  | Total Cost |
+| --------- | --- | --- | ---------- |
+| 0.1       | 2   | 0   | 2          |
+| 0.3       | 2   | 0   | 2          |
+| 0.5       | 2   | 1   | 12         |
+| 0.7       | 2   | 1   | 12         |
+
+### Conclusion
+
+- Optimal threshold: **0.1 (or 0.3)**
+- Decision driver: minimize false negatives (high cost)
+- Trade-off accepted: increased false positives (operational overhead)
