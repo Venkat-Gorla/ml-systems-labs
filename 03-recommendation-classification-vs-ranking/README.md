@@ -88,21 +88,33 @@ Each user can interact with multiple items, but we must decide:
 - Evaluate:
   - How many relevant items appear in top-K
 
-## Results Summary (Expected)
+## Results Summary
 
-- Classification works for:
-  - Binary decisions
-  - Simple filtering
+- Classification produced weak results due to naive feature representation
+- Ranking also performed poorly despite correct problem framing
+- Ranking required valid evaluation (users with ≥2 items)
 
-- Ranking works better for:
-  - Ordering items
-  - Top-N recommendation
+- Classification limitations:
+  - No natural ordering of items
+  - Poor performance with weak features
+
+- Ranking limitations:
+  - Highly sensitive to feature quality
+  - Near-random ordering with naive features
+
+## Key Learning
+
+- Problem framing alone is not sufficient
+- Both classification and ranking fail with poor features
+- Ranking is the correct formulation for recommendation problems
+- However, **feature representation is the primary driver of performance**
 
 ## Expected Outcome
 
 > A clear understanding that:
 
-**“Recommendation problems are better framed as ranking problems, not classification.”**
+**“Recommendation problems should be framed as ranking problems,
+but success depends on meaningful feature representation.”**
 
 ## Notes
 
