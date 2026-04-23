@@ -2,130 +2,74 @@
 
 ## Problem
 
-Recommend relevant items (e.g., products, content) to users.
-
-Each user can interact with multiple items, but we must decide:
+Recommend relevant items to users.
 
 > **Key question:**
-> Should we predict individual interactions (classification), or rank items relative to each other (ranking)?
+> Should we predict interactions (classification) or rank items (ranking) for top-N recommendations?
 
-## Goal
-
-- Compare **classification vs ranking approaches**
-- Understand differences in:
-  - Problem formulation
-  - Output behavior
-  - Evaluation strategy
-- Identify which approach better supports **top-N recommendations**
-
-## Validation Approach
-
-### Approach A — Classification
-
-- Predict:
-  - Will user interact with item? (yes/no)
-
-- Output:
-  - Binary prediction per (user, item)
-
-- Usage:
-  - Filter items with positive prediction
-
-**Limitations:**
-
-- Does not naturally order items
-- Difficult to select top-N recommendations
-
-### Approach B — Ranking
-
-- Predict:
-  - Relevance score for each (user, item)
-
-- Output:
-  - Continuous score
-
-- Usage:
-  - Sort items by score
-  - Recommend top-N items
-
-**Advantage:**
-
-- Directly optimized for recommendation scenarios
-
-## Dataset
-
-- Simulated or small dataset:
-  - user_id
-  - item_id
-  - interaction (0/1)
-
-- Each user has multiple candidate items
-
-## Comparison Metrics
+## Approach
 
 ### Classification
 
-- Accuracy
-- Precision
-- Recall
-- F1 Score
+- Predict: interaction (yes/no) per (user, item)
+- Output: binary labels → filter positives
+
+**Limitation:**
+
+- No natural ordering → weak for top-N recommendation
 
 ### Ranking
 
-- Precision@K
-- Recall@K
-- (Optional) Mean Reciprocal Rank (MRR)
+- Predict: relevance score per (user, item)
+- Output: sorted items → top-N selection
 
-## Evaluation Strategy
+**Advantage:**
+
+- Directly models recommendation use-case
+
+## Metrics
+
+- Classification: Accuracy, Precision, Recall, F1
+- Ranking: Precision@K (primary), Recall@K
+
+## Evaluation
 
 - For each user:
-  - Generate predictions for multiple items
-
-- Compare:
-  - Classification → which items predicted positive
-  - Ranking → top-K items by score
-
-- Evaluate:
-  - How many relevant items appear in top-K
+  - Score multiple items
+  - Compare:
+    - classification → predicted positives
+    - ranking → top-K items
 
 ## Results Summary
 
-- Classification produced weak results due to naive feature representation
-- Ranking also performed poorly despite correct problem framing
-- Ranking required valid evaluation (users with ≥2 items)
+- Classification performed poorly with naive features
+- Ranking also weak despite correct formulation
+- Ranking required filtering users with insufficient test data
 
-- Classification limitations:
-  - No natural ordering of items
-  - Poor performance with weak features
+**Limitations:**
 
-- Ranking limitations:
-  - Highly sensitive to feature quality
-  - Near-random ordering with naive features
+- Classification → no ordering + weak signals
+- Ranking → highly dependent on feature quality
 
 ## Key Learning
 
-- Problem framing alone is not sufficient
-- Both classification and ranking fail with poor features
-- Ranking is the correct formulation for recommendation problems
-- However, **feature representation is the primary driver of performance**
+- Ranking is the correct formulation for recommendation
+- But **problem framing alone is not enough**
+- **Feature representation is the primary driver of performance**
 
-## Expected Outcome
+## Conclusion
 
-> A clear understanding that:
-
-**“Recommendation problems should be framed as ranking problems,
-but success depends on meaningful feature representation.”**
+> **Recommendation systems should use ranking, but success depends on meaningful features.**
 
 ## Notes
 
-POC focus:
+Focus:
 
 - Problem framing
-- Output interpretation
 - Evaluation differences
 
-Not focused on:
+Not covered:
 
-- Advanced recommendation algorithms
 - Feature engineering
-- Production-scale systems
+- Advanced models
+- Production systems
