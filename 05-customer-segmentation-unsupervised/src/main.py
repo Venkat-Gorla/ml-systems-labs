@@ -1,6 +1,6 @@
-import pandas as pd
 from load_and_inspect_data import load_and_validate
 from features import select_features, scale_features
+from model import train_kmeans, inspect_clusters, interpret_clusters
 
 
 def main():
@@ -9,7 +9,12 @@ def main():
     X = select_features(df)
     X_scaled = scale_features(X)
 
-    print("\nPipeline step complete: features ready for clustering")
+    model = train_kmeans(X_scaled, k=5)
+    inspect_clusters(model, X_scaled)
+
+    print("\nPipeline step complete: clustering done")
+
+    interpret_clusters(df, model.labels_)
 
 
 if __name__ == "__main__":

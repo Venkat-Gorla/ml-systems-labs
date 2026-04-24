@@ -16,9 +16,6 @@ def select_features(df: pd.DataFrame) -> pd.DataFrame:
     """
     X = df[FEATURE_COLUMNS].copy()
 
-    print("\n=== Selected Features Sample ===")
-    print(X.head())
-
     assert not X.isnull().any().any(), "Null values found in features"
 
     return X
@@ -30,9 +27,6 @@ def scale_features(X: pd.DataFrame) -> np.ndarray:
     """
     scaler = StandardScaler()
     X_scaled = scaler.fit_transform(X)
-
-    print("\n=== Scaled Feature Sample ===")
-    print(X_scaled[:5])
 
     # mean and std validation after scaling
     mean = X_scaled.mean(axis=0)
