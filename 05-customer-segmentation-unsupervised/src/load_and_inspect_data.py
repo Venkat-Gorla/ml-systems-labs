@@ -9,9 +9,28 @@ REQUIRED_COLUMNS = [
     "Spending Score (1-100)",
 ]
 
+NUMERIC_COLS = ["Age", "Annual Income (k$)", "Spending Score (1-100)"]
 
-# vegorla: package this logic into reusable function
-def inspect_data(df: pd.DataFrame) -> None:
+
+def load_and_validate() -> pd.DataFrame:
+    df = pd.read_csv("data/Mall_Customers.csv")
+
+    for col in REQUIRED_COLUMNS:
+        assert col in df.columns, f"Missing column: {col}"
+
+    null_counts = df.isnull().sum()
+    assert null_counts.sum() == 0, "Null values found"
+
+    assert df["Spending Score (1-100)"].between(1, 100).all()
+
+    assert df[NUMERIC_COLS].select_dtypes(
+        include="number").shape[1] == len(NUMERIC_COLS)
+
+    return df
+
+
+def inspect_data() -> None:
+    df = load_and_validate()
     print("\n=== Data Shape ===")
     print(df.shape)
 
@@ -36,9 +55,8 @@ def inspect_data(df: pd.DataFrame) -> None:
     print("Spending score within expected range")
 
     print("\n=== Numeric Columns Check ===")
-    numeric_cols = ["Age", "Annual Income (k$)", "Spending Score (1-100)"]
-    assert df[numeric_cols].select_dtypes(
-        include="number").shape[1] == len(numeric_cols)
+    assert df[NUMERIC_COLS].select_dtypes(
+        include="number").shape[1] == len(NUMERIC_COLS)
     print("All required numeric columns are valid")
 
     print("\n=== Duplicate Check ===")
@@ -52,8 +70,7 @@ def inspect_data(df: pd.DataFrame) -> None:
 
 
 def main():
-    df = pd.read_csv("data/Mall_Customers.csv")
-    inspect_data(df)
+    inspect_data()
 
 
 if __name__ == "__main__":

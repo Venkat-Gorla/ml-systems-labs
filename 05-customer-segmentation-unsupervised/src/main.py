@@ -1,12 +1,10 @@
 import pandas as pd
-from load_and_inspect_data import inspect_data
+from load_and_inspect_data import load_and_validate
 from features import select_features, scale_features
 
 
 def main():
-    df = pd.read_csv("data/Mall_Customers.csv")
-
-    inspect_data(df)
+    df = load_and_validate()
 
     X = select_features(df)
     X_scaled = scale_features(X)
