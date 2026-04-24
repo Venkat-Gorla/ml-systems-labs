@@ -27,9 +27,6 @@ def inspect_clusters(model: KMeans, X_scaled: np.ndarray) -> None:
     for u, c in zip(unique, counts):
         print(f"Cluster {u}: {c} points")
 
-    print("\n=== Cluster Centers (scaled space) ===")
-    print(model.cluster_centers_)
-
     assert len(
         unique) > 1, "All points assigned to one cluster — something is wrong"
 
