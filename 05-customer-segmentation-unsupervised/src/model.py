@@ -31,9 +31,9 @@ def inspect_clusters(model: KMeans) -> None:
         unique) > 1, "All points assigned to one cluster — something is wrong"
 
 
-def interpret_clusters(df: pd.DataFrame, labels) -> None:
+def interpret_clusters(df: pd.DataFrame, labels) -> pd.DataFrame:
     """
-    Attach cluster labels and show mean feature values per cluster.
+    Attach cluster labels, print summary, and return enriched dataframe.
     """
     df_with_clusters = df.copy()
     df_with_clusters["Cluster"] = labels
@@ -46,3 +46,5 @@ def interpret_clusters(df: pd.DataFrame, labels) -> None:
     ]].mean()
 
     print(summary.round(2))
+
+    return df_with_clusters
