@@ -2,56 +2,61 @@
 
 ## Problem
 
-We have customer-level data (age, income, spending), but no clear way to group customers into meaningful segments.
-Without segmentation, any downstream decisions (marketing, targeting, etc.) remain broad and inefficient.
+We have customer-level data (age, income, spending) but no clear segmentation.
+Without grouping similar customers, targeting and decision-making remain broad and inefficient.
 
 ## Goal
 
-Identify natural groupings within the customer base and visualize them in a way that is easy to understand and reason about.
+Identify natural customer segments and validate them through simple visualization and interpretation.
 
-This is a small, exploratory exercise focused on building intuition rather than optimizing results.
+## Approach
 
-## Validation Approach
-
-Since there are no predefined labels:
-
-- Use a clustering method to group similar customers
-- Visualize the clusters in 2D
-- Inspect cluster characteristics (e.g., average income/spending)
-- Check if the groupings are interpretable and reasonably distinct
-
-No formal evaluation metrics are prioritized at this stage.
+- Select core behavioral features (Age, Income, Spending)
+- Standardize features to ensure fair distance calculation
+- Apply KMeans clustering (k=5)
+- Interpret clusters using original feature values
+- Project data to 2D using PCA for visualization
 
 ## Tech Stack
 
-| Category      | Tools         |
-| ------------- | ------------- |
-| Language      | Python        |
-| Environment   | Google Colab  |
-| Data Handling | Pandas, NumPy |
-| Modeling      | Scikit-learn  |
-| Visualization | Matplotlib    |
+| Category          | Tools                 |
+| ----------------- | --------------------- |
+| **Language**      | Python                |
+| **Environment**   | VS Code, Google Colab |
+| **Data Handling** | Pandas, NumPy         |
+| **Modeling**      | Scikit-learn          |
+| **Visualization** | Matplotlib            |
 
-## Results Summary
+## Results
 
-<!-- vegorla -->
+- Identified 5 distinct customer segments
 
-(To be filled after implementation)
+- Clear separation observed in PCA-based 2D visualization (~78% variance retained)
 
-Expected artifacts:
+- Clusters show meaningful behavioral patterns:
+  - High income, high spending → premium segment
+  - Low income, high spending → impulsive segment
+  - High income, low spending → low-engagement segment
+  - Moderate groups with balanced behavior
 
-- Cluster assignment for each customer
-- 2D plot showing group separation
-- Basic summary of each group
+- Cluster assignments persisted for downstream analysis
 
-## Expected Outcome
+## Key Takeaways
 
-- A working end-to-end notebook
-- A clear visual representation of customer groups
-- A basic understanding of how clustering behaves on real data
+- Scaling is critical for distance-based models like KMeans
+- Clustering can reveal non-obvious behavioral patterns
+- PCA is effective for validating cluster separability visually
+- Income alone does not explain spending behavior
 
-## Scope Notes
+## Outputs
 
-- This is a short POC (1–2 days)
-- Focus is on clarity and hands-on understanding
-- Minimal tuning and no production considerations
+- CLI pipeline for clustering and interpretation
+- Processed dataset with cluster labels
+- PCA visualization (2D scatter plot)
+- Notebook for exploratory analysis
+
+## Scope
+
+- Short POC (1–2 days)
+- Focus on clarity and intuition
+- No production considerations
