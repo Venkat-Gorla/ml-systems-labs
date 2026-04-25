@@ -10,7 +10,7 @@ def main():
     X_scaled = scale_features(X)
 
     model = train_kmeans(X_scaled, k=5)
-    inspect_clusters(model, X_scaled)
+    inspect_clusters(model)
 
     print("\nPipeline step complete: clustering done")
 

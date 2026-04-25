@@ -13,7 +13,7 @@ def train_kmeans(X_scaled: np.ndarray, k: int = 5) -> KMeans:
     return model
 
 
-def inspect_clusters(model: KMeans, X_scaled: np.ndarray) -> None:
+def inspect_clusters(model: KMeans) -> None:
     """
     Print basic cluster information.
     """
