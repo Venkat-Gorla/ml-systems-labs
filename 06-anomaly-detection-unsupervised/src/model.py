@@ -20,7 +20,14 @@ def run_isolation_forest(X_scaled: np.ndarray):
     # Scores: higher = more normal, lower = more anomalous
     scores = model.decision_function(X_scaled)
 
-    print("\n=== Prediction Sample ===")
+    return labels, scores
+
+
+def print_anomaly_summary(labels: np.ndarray, scores: np.ndarray) -> None:
+    """
+    Print summary of anomaly detection results.
+    """
+    print("\n=== Prediction Sample (first 10) ===")
     print(labels[:10])
 
     # Count anomalies
@@ -33,6 +40,18 @@ def run_isolation_forest(X_scaled: np.ndarray):
     print("\n=== Last 10 Rows (Validation) ===")
     print(labels[-10:])
 
-    print("\nPipeline step complete: anomaly detection done")
+    # --- score-based validation ---
+    print("\n=== Score Sample (first 10) ===")
+    print(scores[:10])
 
-    return labels, scores
+    # Lower score = more anomalous
+    top_n = 10
+    anomaly_indices = np.argsort(scores)[:top_n]
+
+    print(f"\n=== Top {top_n} Most Anomalous Points (by score) ===")
+    print(anomaly_indices)
+
+    print("\nCorresponding Scores:")
+    print(scores[anomaly_indices])
+
+    print("\nPipeline step complete: anomaly detection done")
