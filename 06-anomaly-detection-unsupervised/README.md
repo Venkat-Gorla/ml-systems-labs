@@ -2,20 +2,22 @@
 
 ## Problem
 
-In many real-world datasets, rare or unusual observations can have high impact (e.g., fraud, system failures).
-These anomalies are typically unlabeled and difficult to detect using rule-based approaches.
+Real-world datasets often contain rare, high-impact observations (e.g., fraud, failures).
+These anomalies are unlabeled and cannot be reliably captured using rule-based logic.
 
 ## Goal
 
-Identify unusual data points without prior labels and build intuition for how anomaly detection behaves on structured data.
+Detect unusual data points without labels and build intuition for how anomaly detection behaves on structured data.
 
 ## Approach
 
-- Select relevant numeric features
-- Standardize features for fair comparison
-- Apply an unsupervised anomaly detection method (e.g., Isolation Forest)
-- Score each observation based on “normality”
-- Inspect and interpret top anomalies
+- Standardize features using `StandardScaler`
+- Apply `IsolationForest` for anomaly detection
+- Generate:
+  - Binary labels (`1 = normal`, `-1 = anomaly`)
+  - Continuous anomaly scores
+- Rank observations by anomaly score
+- Visualize anomalies using 2D scatter plot
 
 ## Tech Stack
 
@@ -29,26 +31,38 @@ Identify unusual data points without prior labels and build intuition for how an
 
 ## Results
 
-(To be filled after implementation)
+- Total observations: 60
+- Anomalies detected: 6 (~10%, via contamination)
 
-Expected artifacts:
+### Key Observations
 
-- Anomaly score per observation
-- Ranked list of top anomalies
-- Visualization highlighting outliers
+- Injected high-value points were correctly identified as anomalies
+- Not all distant points are anomalous → local density matters
+- Model provides both:
+  - Hard labels (thresholded)
+  - Soft scores (ranking)
+
+## Artifacts
+
+- Processed dataset with anomaly labels + scores
+- 2D visualization of anomalies
 
 ## Key Takeaways
 
-(To be filled after implementation)
-
-## Outputs
-
-- CLI pipeline for anomaly scoring
-- Processed dataset with anomaly flags/scores
-- Visualization of normal vs anomalous points
+- Isolation Forest isolates anomalies via random partitioning
+- Lower score → more anomalous
+- Labels depend on `contamination` (forced threshold)
+- Scores provide more reliable insight than labels
+- Visualization confirms model behavior effectively
 
 ## Scope
 
 - Short POC (1–2 days)
-- Focus on intuition and behavior of anomaly detection
-- No hyperparameter tuning or production considerations
+- Focus on clarity and intuition
+- No hyperparameter tuning or production optimization
+
+## Next Steps
+
+- Compare with alternative methods (e.g., DBSCAN, LOF)
+- Experiment with different contamination values
+- Extend to higher-dimensional datasets
