@@ -1,5 +1,6 @@
 from load_and_inspect_data import load_and_validate_data
 from features import scale_features
+from model import run_isolation_forest
 
 
 def main():
@@ -7,7 +8,7 @@ def main():
     df = load_and_validate_data(path)
     X_scaled = scale_features(df)
 
-    print("\nPipeline step complete: features ready for anomaly detection")
+    labels, scores = run_isolation_forest(X_scaled)
 
 
 if __name__ == "__main__":
