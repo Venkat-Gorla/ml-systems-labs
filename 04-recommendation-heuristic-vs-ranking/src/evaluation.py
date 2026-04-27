@@ -31,6 +31,7 @@ def train_test_split(df: pd.DataFrame) -> pd.DataFrame:
     - Ensures unbiased test selection per user
     """
 
+    # shuffle rows (fixed seed → deterministic split)
     df = df.sample(frac=1, random_state=42)
 
     test_idx = df.groupby("user_id").head(1).index

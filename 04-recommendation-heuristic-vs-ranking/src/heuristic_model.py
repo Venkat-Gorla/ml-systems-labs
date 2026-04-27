@@ -2,6 +2,7 @@ from typing import Dict, List
 import pandas as pd
 from data_loader import load_data
 from evaluation import train_test_split, precision_at_k
+from debug_utils import debug_user
 
 
 def build_user_item_map(df: pd.DataFrame) -> Dict[int, set]:
@@ -56,6 +57,14 @@ def main():
     test_user_items = build_user_item_map(test_df)
     score = precision_at_k(recommendations, test_user_items, k)
 
+    debug_user_id = 1
+    debug_user(
+        debug_user_id,
+        train_user_items,
+        test_user_items,
+        item_popularity,
+        recommendations,
+    )
     print(f"Precision@{k}: {score:.4f}")
 
 
