@@ -1,4 +1,5 @@
 from typing import Tuple
+from typing import Dict, List, Set
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
@@ -48,3 +49,46 @@ def train_model(
     model.fit(X, y)
 
     return model
+
+
+def recommend_top_k_ml(
+    model: LogisticRegression,
+    encoder: OneHotEncoder,
+    user_items: Dict[int, Set[int]],
+    all_items: List[int],
+    k: int,
+) -> Dict[int, List[int]]:
+    """
+    Generate top-K recommendations using ML model.
+
+    Returns:
+        {user_id: [item_id, ...]}
+    """
+
+    recommendations = {}
+
+    for user, seen_items in user_items.items():
+        # candidates = all unseen items
+        candidates = [item for item in all_items if item not in seen_items]
+
+        X_input = pd.DataFrame({
+            "user_id": [user] * len(candidates),
+            "item_id": candidates,
+        })
+
+        X_encoded = encoder.transform(X_input)
+
+        probs = model.predict_proba(X_encoded)[:, 1]
+
+        # rank items by probability
+        ranked_items = [
+            item for _, item in sorted(
+                zip(probs, candidates),
+                key=lambda x: x[0],
+                reverse=True,
+            )
+        ]
+
+        recommendations[user] = ranked_items[:k]
+
+    return recommendations
