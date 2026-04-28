@@ -5,6 +5,11 @@ import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.linear_model import LogisticRegression
 
+from data_loader import load_data
+from evaluation import train_test_split, precision_at_k
+from heuristic_model import build_user_item_map
+from debug_utils import debug_user
+
 
 def prepare_training_data(
     train_df: pd.DataFrame,
@@ -24,7 +29,7 @@ def prepare_training_data(
     X_raw = train_df[["user_id", "item_id"]]
     y = train_df["interaction"]
 
-    encoder = OneHotEncoder(handle_unknown="ignore", sparse=False)
+    encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
     X_encoded = encoder.fit_transform(X_raw)
 
     return X_encoded, y, encoder
@@ -92,3 +97,88 @@ def recommend_top_k_ml(
         recommendations[user] = ranked_items[:k]
 
     return recommendations
+
+
+def add_negative_samples(
+    train_df: pd.DataFrame,
+    num_neg: int = 3,
+    random_state: int = 42,
+) -> pd.DataFrame:
+    """
+    Add negative samples (interaction=0) per user.
+
+    Returns:
+        DataFrame with both positive and negative samples
+    """
+
+    rng = np.random.default_rng(random_state)
+
+    all_items: List[int] = train_df["item_id"].unique().tolist()
+    user_items = train_df.groupby("user_id")["item_id"].apply(set)
+
+    negative_rows = []
+
+    for user, seen_items in user_items.items():
+        unseen_items = list(set(all_items) - seen_items)
+
+        if len(unseen_items) == 0:
+            continue
+
+        sampled_items = rng.choice(
+            unseen_items,
+            size=min(num_neg, len(unseen_items)),
+            replace=False,
+        )
+
+        for item in sampled_items:
+            negative_rows.append(
+                {"user_id": user, "item_id": item, "interaction": 0}
+            )
+
+    neg_df = pd.DataFrame(negative_rows)
+
+    return pd.concat([train_df, neg_df], ignore_index=True)
+
+
+def main():
+    path = "data/interactions.csv"
+    k = 5
+
+    df = train_test_split(load_data(path))
+    train_df = df[~df["is_test"]]
+    train_df = add_negative_samples(train_df)
+    test_df = df[df["is_test"]]
+
+    train_user_items = build_user_item_map(train_df)
+    test_user_items = build_user_item_map(test_df)
+
+    X, y, encoder = prepare_training_data(train_df)
+    model = train_model(X, y)
+
+    all_items = sorted(df["item_id"].unique())
+
+    # Recommend
+    recommendations = recommend_top_k_ml(
+        model,
+        encoder,
+        train_user_items,
+        all_items,
+        k,
+    )
+
+    debug_user_id = 1
+    debug_user(
+        debug_user_id,
+        train_user_items,
+        test_user_items,
+        pd.Series(dtype=float),  # placeholder (no popularity here)
+        recommendations,
+    )
+
+    # Evaluate
+    score = precision_at_k(recommendations, test_user_items, k)
+    print(f"ML Precision@{k}: {score:.4f}")
+
+
+if __name__ == "__main__":
+    main()
