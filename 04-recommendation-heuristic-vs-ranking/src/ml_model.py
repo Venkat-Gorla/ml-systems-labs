@@ -7,6 +7,7 @@ from sklearn.linear_model import LogisticRegression
 
 from data_loader import load_data
 from evaluation import train_test_split, precision_at_k
+from data_ops import add_negative_samples
 from heuristic_model import build_user_item_map
 from debug_utils import debug_user
 
@@ -97,48 +98,6 @@ def recommend_top_k_ml(
         recommendations[user] = ranked_items[:k]
 
     return recommendations
-
-
-# vegorla: move to separate file and have sanity test
-def add_negative_samples(
-    train_df: pd.DataFrame,
-    num_neg: int = 3,
-    random_state: int = 42,
-) -> pd.DataFrame:
-    """
-    Add negative samples (interaction=0) per user.
-
-    Returns:
-        DataFrame with both positive and negative samples
-    """
-
-    rng = np.random.default_rng(random_state)
-
-    all_items: List[int] = train_df["item_id"].unique().tolist()
-    user_items = train_df.groupby("user_id")["item_id"].apply(set)
-
-    negative_rows = []
-
-    for user, seen_items in user_items.items():
-        unseen_items = list(set(all_items) - seen_items)
-
-        if len(unseen_items) == 0:
-            continue
-
-        sampled_items = rng.choice(
-            unseen_items,
-            size=min(num_neg, len(unseen_items)),
-            replace=False,
-        )
-
-        for item in sampled_items:
-            negative_rows.append(
-                {"user_id": user, "item_id": item, "interaction": 0}
-            )
-
-    neg_df = pd.DataFrame(negative_rows)
-
-    return pd.concat([train_df, neg_df], ignore_index=True)
 
 
 def main():
