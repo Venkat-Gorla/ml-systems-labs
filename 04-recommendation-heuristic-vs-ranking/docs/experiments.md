@@ -11,10 +11,10 @@
 
 ## Results
 
-| Date       | Approach   | Precision@5 | Key Insight                                | Commit |
-| ---------- | ---------- | ----------- | ------------------------------------------ | ------ |
-| 2026-04-29 | Heuristic  | 0.0175      | Strong baseline using global popularity    | <hash> |
-| 2026-04-29 | ML (Naive) | 0.0150      | Underperforms heuristic with weak features | <hash> |
+| Date       | Approach   | Precision@5 | Key Insight                                | Commit  |
+| ---------- | ---------- | ----------- | ------------------------------------------ | ------- |
+| 2026-04-29 | Heuristic  | 0.0175      | Strong baseline using global popularity    | cb86dc5 |
+| 2026-04-29 | ML (Naive) | 0.0150      | Underperforms heuristic with weak features | cb86dc5 |
 
 ## Repro
 
