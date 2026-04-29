@@ -9,7 +9,8 @@ from data_loader import load_data
 from evaluation import train_test_split, precision_at_k
 from data_ops import add_negative_samples
 from heuristic_model import build_user_item_map
-from debug_utils import debug_user
+from ml_utils import score_candidates
+from debug_utils import debug_user_ml
 
 
 def prepare_training_data(
@@ -74,28 +75,12 @@ def recommend_top_k_ml(
     recommendations = {}
 
     for user, seen_items in user_items.items():
-        # candidates = all unseen items
-        candidates = [item for item in all_items if item not in seen_items]
+        scored_items = score_candidates(
+            user, seen_items, all_items, model, encoder
+        )
 
-        X_input = pd.DataFrame({
-            "user_id": [user] * len(candidates),
-            "item_id": candidates,
-        })
-
-        X_encoded = encoder.transform(X_input)
-
-        probs = model.predict_proba(X_encoded)[:, 1]
-
-        # rank items by probability
-        ranked_items = [
-            item for _, item in sorted(
-                zip(probs, candidates),
-                key=lambda x: x[0],
-                reverse=True,
-            )
-        ]
-
-        recommendations[user] = ranked_items[:k]
+        top_k = [int(item) for item, _ in scored_items[:k]]
+        recommendations[user] = top_k
 
     return recommendations
 
@@ -127,12 +112,14 @@ def main():
     )
 
     debug_user_id = 1
-    debug_user(
+    debug_user_ml(
         debug_user_id,
         train_user_items,
         test_user_items,
-        pd.Series(dtype=float),  # placeholder (no popularity here)
-        recommendations,
+        model,
+        encoder,
+        all_items,
+        k,
     )
 
     # Evaluate
