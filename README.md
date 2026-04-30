@@ -1,52 +1,45 @@
 # ML Systems Labs
 
-This repository is a collection of focused machine learning explorations built with an engineering-first mindset.
+This repository is a collection of focused machine learning explorations built with an **engineering-first, decision-driven** mindset.
 
-The intent is not to showcase isolated models, but to understand how ML techniques behave in practical scenarios—where trade-offs, data constraints, and evaluation choices matter as much as the algorithms themselves.
+The goal is not to showcase models in isolation, but to understand **how and when ML techniques work in practice**—where data, evaluation, and trade-offs shape outcomes as much as algorithms.
 
 ## Why This Exists
 
-Strong ML systems are a result of sound decisions, not just model sophistication.
+Effective ML systems are driven by **quality of decisions**, not model complexity.
 
 This repo reflects a deliberate effort to:
 
-- Develop practical intuition across core ML problem types
-- Evaluate techniques in realistic, implementation-driven settings
-- Bridge traditional software engineering discipline with applied ML
+- Build practical intuition across core ML problem types
+- Evaluate techniques through **implementation, not theory**
+- Apply **software engineering rigor** to ML workflows
 
-Each project is intentionally scoped as a “POC,” but implemented with:
+Each project is scoped as a “POC,” but implemented with:
 
-- Clean, production-style code
+- **Production-style code**
 - Tests and validation where relevant
-- Clear documentation of assumptions and outcomes
+- Clear documentation of assumptions and results
 
-## Scope of Work
+## Scope
 
-The work spans a range of common ML problem patterns:
+The work covers common ML patterns:
 
-- Classification (e.g., spam detection, fraud detection)
+- Classification (spam, fraud)
 - Recommendation systems (classification vs ranking, heuristic vs ML)
 - Unsupervised learning (segmentation, anomaly detection)
 
-Across these, the focus remains consistent:
-
-- What problem are we solving?
-- What approach is appropriate?
-- What are the trade-offs?
-
-## What to Expect
-
-Each directory is fully self-contained and includes:
-
-- Problem framing and context
-- Implementation details
-- Evaluation methodology
-- Observations and conclusions
-
-The emphasis is on clarity, reproducibility, and decision-making—not just results.
+Across all projects, the focus remains consistent:
+**problem → approach → trade-offs → outcome**
 
 ## How to Navigate
 
-Start with any folder. Each POC stands on its own and is designed to be read independently.
+Each directory is fully self-contained and includes:
 
-This repository represents ongoing work toward building strong, practical ML intuition grounded in real code and real trade-offs.
+- Problem framing
+- Implementation
+- Evaluation
+- Key observations
+
+Start anywhere—every POC is designed to be read independently.
+
+This is ongoing work aimed at building **strong, practical ML intuition grounded in real systems and real constraints**.
