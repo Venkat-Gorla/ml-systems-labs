@@ -2,7 +2,8 @@
 
 ## Dataset
 
-- file: data/interactions.csv
+- file: data/interactions.csv (V1)
+- file: data/interactions_v2.csv (V2)
 - users: 80
 - items: 40
 - interactions per user: 6
@@ -11,19 +12,23 @@
   - each group prefers a subset of items
   - 20% noise (cross-group interactions)
 - split: leave-one-out (1 test item per user)
-- negatives: 3 random unseen items per user (mixed signal)
+- negatives:
+  - V1: 3 random unseen items per user (mixed signal)
+  - V2: 3 non-preferred items per user (group-aware)
 
 ## Results
 
-| Date       | Approach   | Precision@5 | Key Insight                                           | Commit  |
-| ---------- | ---------- | ----------- | ----------------------------------------------------- | ------- |
-| 2026-04-29 | Heuristic  | 0.0175      | Strong baseline using global popularity               | cb86dc5 |
-| 2026-04-29 | ML (Naive) | 0.0150      | Fails due to hidden structure + weak features + noise | cb86dc5 |
+| Date       | Approach  | Precision@5 | Key Insight                                           | Commit  |
+| ---------- | --------- | ----------- | ----------------------------------------------------- | ------- |
+| 2026-04-29 | Heuristic | 0.0175      | Strong baseline using global popularity               | cb86dc5 |
+| 2026-04-29 | ML (V1)   | 0.0150      | Fails due to hidden structure + weak features + noise | cb86dc5 |
+| 2026-05-01 | ML (V2)   | 0.0300      | Structured data + aligned sampling enables ML         | 13f253a |
 
 ## Repro
 
 - heuristic → `uv run src/heuristic_model.py`
-- ml → `uv run src/ml_model.py`
+- ml (V1) → `uv run src/ml_model.py`
+- ml (V2) → `uv run src/ml_model_v2.py`
 
 ## Notes
 
@@ -32,7 +37,7 @@
 - Filters seen items per user
 - Deterministic
 
-### ML (Naive)
+### ML (V1)
 
 - Model: LogisticRegression
 - Features:
