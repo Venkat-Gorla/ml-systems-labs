@@ -20,26 +20,19 @@ Each project is scoped as a “POC,” but implemented with:
 - Tests and validation where relevant
 - Clear documentation of assumptions and results
 
-## Scope
+## Reading Guide
 
-The work covers common ML patterns:
+Each directory is fully self-contained and explores a single ML problem end-to-end.
 
-- Classification (spam, fraud)
-- Recommendation systems (classification vs ranking, heuristic vs ML)
-- Unsupervised learning (segmentation, anomaly detection)
+While problem types vary, every POC follows a consistent decision structure:
 
-Across all projects, the focus remains consistent:
-**problem → approach → trade-offs → outcome**
+| Step         | Focus                         |
+| ------------ | ----------------------------- |
+| **Framing**  | Problem and expected outcome  |
+| **Baseline** | Non-ML or simple approach     |
+| **Approach** | Chosen ML method              |
+| **Outcome**  | Results, trade-offs, decision |
 
-## How to Navigate
-
-Each directory is fully self-contained and includes:
-
-- Problem framing
-- Implementation
-- Evaluation
-- Key observations
-
-Start anywhere—every POC is designed to be read independently.
+Any POC can be read independently.
 
 This is ongoing work aimed at building **strong, practical ML intuition grounded in real systems and real constraints**.
