@@ -1,5 +1,4 @@
-from typing import Tuple
-from typing import Dict, List, Set
+from typing import Tuple, Dict, List, Set, Callable
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
@@ -85,13 +84,14 @@ def recommend_top_k_ml(
     return recommendations
 
 
-def main():
-    path = "data/interactions.csv"
-    k = 5
-
-    df = train_test_split(load_data(path))
+def run_pipeline(
+    data_path: str,
+    negative_sampler: Callable[[pd.DataFrame], pd.DataFrame],
+    k: int = 5,
+) -> float:
+    df = train_test_split(load_data(data_path))
     train_df = df[~df["is_test"]]
-    train_df = add_negative_samples(train_df)
+    train_df = negative_sampler(train_df)
     test_df = df[df["is_test"]]
 
     train_user_items = build_user_item_map(train_df)
@@ -123,7 +123,16 @@ def main():
     )
 
     # Evaluate
-    score = precision_at_k(recommendations, test_user_items, k)
+    return precision_at_k(recommendations, test_user_items, k)
+
+
+def main():
+    k = 5
+    score = run_pipeline(
+        data_path="data/interactions.csv",
+        negative_sampler=add_negative_samples,
+        k=k,
+    )
     print(f"ML Precision@{k}: {score:.4f}")
 
 
