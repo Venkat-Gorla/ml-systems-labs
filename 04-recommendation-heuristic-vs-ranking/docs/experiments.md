@@ -10,7 +10,6 @@
   - users randomly assigned to 4 groups
   - each group prefers a subset of items
   - 20% noise (cross-group interactions)
-
 - split: leave-one-out (1 test item per user)
 - negatives: 3 random unseen items per user (preferred and non-preferred)
 
@@ -39,7 +38,6 @@
 - Features:
   - user_id
   - item_id
-
 - Ranking via predicted probability
 
 ## Observations
@@ -53,6 +51,5 @@
 
 - Not all structure is learnable:
   - signal must align with observable features
-
 - Heuristic remains the better choice with current setup
 - **Data representation and feature alignment are critical for ML success**
