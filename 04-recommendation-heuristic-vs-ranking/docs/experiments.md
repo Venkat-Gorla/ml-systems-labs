@@ -11,14 +11,14 @@
   - each group prefers a subset of items
   - 20% noise (cross-group interactions)
 - split: leave-one-out (1 test item per user)
-- negatives: 3 random unseen items per user (preferred and non-preferred)
+- negatives: 3 random unseen items per user (mixed signal)
 
 ## Results
 
-| Date       | Approach   | Precision@5 | Key Insight                              | Commit  |
-| ---------- | ---------- | ----------- | ---------------------------------------- | ------- |
-| 2026-04-29 | Heuristic  | 0.0175      | Strong baseline using global popularity  | cb86dc5 |
-| 2026-04-29 | ML (Naive) | 0.0150      | Fails due to hidden user group structure | cb86dc5 |
+| Date       | Approach   | Precision@5 | Key Insight                                           | Commit  |
+| ---------- | ---------- | ----------- | ----------------------------------------------------- | ------- |
+| 2026-04-29 | Heuristic  | 0.0175      | Strong baseline using global popularity               | cb86dc5 |
+| 2026-04-29 | ML (Naive) | 0.0150      | Fails due to hidden structure + weak features + noise | cb86dc5 |
 
 ## Repro
 
@@ -43,8 +43,9 @@
 ## Observations
 
 - Dataset contains **implicit group structure**, but:
-  - user groups are randomly assigned (not encoded in features)
+  - user groups are randomly assigned and not encoded in features
   - model cannot directly infer group membership
+- Negative sampling mixes preferred and non-preferred items → weak learning signal
 - Test items often ranked near bottom (~34/35)
 
 ## Key Learning
