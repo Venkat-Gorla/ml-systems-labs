@@ -6,15 +6,20 @@
 - users: 80
 - items: 40
 - interactions per user: 6
+- structure:
+  - users randomly assigned to 4 groups
+  - each group prefers a subset of items
+  - 20% noise (cross-group interactions)
+
 - split: leave-one-out (1 test item per user)
-- negatives: 3 per user (random sampling)
+- negatives: 3 random unseen items per user (preferred and non-preferred)
 
 ## Results
 
-| Date       | Approach   | Precision@5 | Key Insight                                | Commit  |
-| ---------- | ---------- | ----------- | ------------------------------------------ | ------- |
-| 2026-04-29 | Heuristic  | 0.0175      | Strong baseline using global popularity    | cb86dc5 |
-| 2026-04-29 | ML (Naive) | 0.0150      | Underperforms heuristic with weak features | cb86dc5 |
+| Date       | Approach   | Precision@5 | Key Insight                              | Commit  |
+| ---------- | ---------- | ----------- | ---------------------------------------- | ------- |
+| 2026-04-29 | Heuristic  | 0.0175      | Strong baseline using global popularity  | cb86dc5 |
+| 2026-04-29 | ML (Naive) | 0.0150      | Fails due to hidden user group structure | cb86dc5 |
 
 ## Repro
 
@@ -25,10 +30,8 @@
 
 ### Heuristic
 
-- Uses global item popularity
 - Filters seen items per user
-- No training required
-- Deterministic output
+- Deterministic
 
 ### ML (Naive)
 
@@ -36,26 +39,20 @@
 - Features:
   - user_id
   - item_id
-- Negative sampling:
-  - 3 negatives per user
+
 - Ranking via predicted probability
 
-### Observations
+## Observations
 
-- ML produces valid ranking (scores + ordering)
-- However, ranking quality is poor
-- Test items often ranked near bottom (e.g., rank ~34/35)
-- Model is confidently wrong due to weak feature representation
+- Dataset contains **implicit group structure**, but:
+  - user groups are randomly assigned (not encoded in features)
+  - model cannot directly infer group membership
+- Test items often ranked near bottom (~34/35)
 
 ## Key Learning
 
-- Heuristic baseline is strong and hard to beat
-- Naive ML does not outperform heuristic
-- ML requires meaningful features to add value
-- Negative sampling introduces noise (false negatives possible)
+- Not all structure is learnable:
+  - signal must align with observable features
 
-## Final Conclusion
-
-- ML does NOT justify its complexity at this stage
-- Heuristic remains the better choice with current data
-- **Feature engineering is required for ML to be competitive**
+- Heuristic remains the better choice with current setup
+- **Data representation and feature alignment are critical for ML success**
