@@ -7,10 +7,13 @@
 - users: 80
 - items: 40
 - interactions per user: 6
-- structure:
+- V1 structure:
   - users randomly assigned to 4 groups
   - each group prefers a subset of items
   - 20% noise (cross-group interactions)
+- V2 structure:
+  - deterministic user-item groups (A/B)
+  - users interact mostly within their group (5 preferred + 1 noise)
 - split: leave-one-out (1 test item per user)
 - negatives:
   - V1: 3 random unseen items per user (mixed signal)
@@ -18,11 +21,11 @@
 
 ## Results
 
-| Date       | Approach  | Precision@5 | Key Insight                                           | Commit  |
-| ---------- | --------- | ----------- | ----------------------------------------------------- | ------- |
-| 2026-04-29 | Heuristic | 0.0175      | Strong baseline using global popularity               | cb86dc5 |
-| 2026-04-29 | ML (V1)   | 0.0150      | Fails due to hidden structure + weak features + noise | cb86dc5 |
-| 2026-05-01 | ML (V2)   | 0.0300      | Structured data + aligned sampling enables ML         | 13f253a |
+| Date       | Approach  | Precision@5 | Key Insight                                                   | Commit  |
+| ---------- | --------- | ----------- | ------------------------------------------------------------- | ------- |
+| 2026-04-29 | Heuristic | 0.0175      | Strong baseline using global popularity                       | cb86dc5 |
+| 2026-04-29 | ML (V1)   | 0.0150      | Fails due to hidden structure + weak features + noise         | cb86dc5 |
+| 2026-05-01 | ML (V2)   | 0.0300      | Structured data + aligned sampling → ML outperforms heuristic | 13f253a |
 
 ## Repro
 
@@ -47,7 +50,7 @@
 
 ## Observations
 
-- Dataset contains **implicit group structure**, but:
+- V1 Dataset contains **implicit group structure**, but:
   - user groups are randomly assigned and not encoded in features
   - model cannot directly infer group membership
 - Negative sampling mixes preferred and non-preferred items → weak learning signal
