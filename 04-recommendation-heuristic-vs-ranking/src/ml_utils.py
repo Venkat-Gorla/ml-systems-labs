@@ -29,15 +29,17 @@ def score_candidates(
     X_cat = encoder.transform(X_input)
 
     if item_popularity is not None:
-        pop_values = (
-            X_input["item_id"]
-            .map(item_popularity)
-            .fillna(0)
-            .values.reshape(-1, 1)
-        )
+        pop_values = _get_popularity_values(X_input, item_popularity)
         X_encoded = np.hstack([X_cat, pop_values])
     else:
         X_encoded = X_cat
+
+    expected_features = model.n_features_in_
+    actual_features = X_encoded.shape[1]
+
+    assert actual_features == expected_features, (
+        f"Feature mismatch: expected={expected_features}, got={actual_features}"
+    )
 
     probs = model.predict_proba(X_encoded)[:, 1]
 
@@ -69,14 +71,19 @@ def compute_item_popularity_feature(
         .to_dict()
     )
 
-    popularity_values = (
-        train_df["item_id"]
+    popularity_values = _get_popularity_values(train_df, item_popularity)
+
+    return popularity_values, item_popularity
+
+
+def _get_popularity_values(X_input, item_popularity):
+    pop_values = (
+        X_input["item_id"]
         .map(item_popularity)
         .fillna(0)
         .values.reshape(-1, 1)
     )
-
-    return popularity_values, item_popularity
+    return pop_values
 
 
 # --- driver / debug ---
