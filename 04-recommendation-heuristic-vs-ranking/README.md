@@ -17,6 +17,8 @@ Unlike previous POC (classification vs ranking), the focus here is:
   - Interpretability
 - Understand when ML is justified
 
+> Detailed experiment results and metrics are tracked in `docs/experiments.md`
+
 ## Validation Approach
 
 ### Heuristic Baseline
@@ -52,12 +54,9 @@ and generates recommendations via sorting (top-K selection).
 
 - Add simple features:
   - item popularity (interaction count)
-  - user activity (interaction count)
+  - user activity (optional)
 
-**Purpose:**
-
-- Observe how feature quality impacts performance
-- Measure incremental improvement
+**Status:** item popularity implemented and validated (see experiments log)
 
 ## Comparison Metrics
 
@@ -75,18 +74,14 @@ and generates recommendations via sorting (top-K selection).
 | **Evaluation** | custom metrics   |
 | **Cloud**      | None (local POC) |
 
-## Results Summary (Expected)
+## Results Summary
 
-- Heuristic provides strong baseline performance
-- Naive ML underperforms due to weak features
-- Improved ML may surpass heuristic
-- Feature quality drives ML success
+Key observations:
 
-## Expected Outcome
-
-> A clear answer to:
-
-**“When does ML justify its complexity over simple heuristics?”**
+- Heuristic provides a strong baseline
+- Naive ML underperforms when signal is not aligned with features
+- Improving data structure and sampling enables ML to outperform heuristic
+- Simple features (e.g., item popularity) provide incremental gains
 
 ## Notes
 
