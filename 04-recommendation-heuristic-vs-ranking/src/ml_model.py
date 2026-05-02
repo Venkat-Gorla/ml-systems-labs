@@ -8,12 +8,13 @@ from data_loader import load_data
 from evaluation import train_test_split, precision_at_k
 from data_ops import add_negative_samples
 from heuristic_model import build_user_item_map
-from ml_utils import score_candidates
+from ml_utils import compute_item_popularity_feature, score_candidates
 from debug_utils import debug_user_ml
 
 
 def prepare_training_data(
     train_df: pd.DataFrame,
+    use_item_popularity: bool,
 ) -> Tuple:
     """
     Prepare training data for naive ML model.
@@ -25,6 +26,7 @@ def prepare_training_data(
         X_encoded: feature matrix
         y: target vector
         encoder: fitted encoder (reuse for inference)
+        item_popularity: Dict[item_id -> count]
     """
 
     X_raw = train_df[["user_id", "item_id"]]
@@ -33,7 +35,15 @@ def prepare_training_data(
     encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
     X_encoded = encoder.fit_transform(X_raw)
 
-    return X_encoded, y, encoder
+    if not use_item_popularity:
+        return X_encoded, y, encoder, None
+
+    popularity_values, item_popularity = compute_item_popularity_feature(
+        train_df
+    )
+    X_encoded = np.hstack([X_encoded, popularity_values])
+
+    return X_encoded, y, encoder, item_popularity
 
 
 def train_model(
@@ -63,6 +73,7 @@ def recommend_top_k_ml(
     user_items: Dict[int, Set[int]],
     all_items: List[int],
     k: int,
+    item_popularity: Dict[int, int],
 ) -> Dict[int, List[int]]:
     """
     Generate top-K recommendations using ML model.
@@ -75,7 +86,12 @@ def recommend_top_k_ml(
 
     for user, seen_items in user_items.items():
         scored_items = score_candidates(
-            user, seen_items, all_items, model, encoder
+            user,
+            seen_items,
+            all_items,
+            model,
+            encoder,
+            item_popularity,
         )
 
         top_k = [int(item) for item, _ in scored_items[:k]]
@@ -88,6 +104,7 @@ def run_pipeline(
     data_path: str,
     negative_sampler: Callable[[pd.DataFrame], pd.DataFrame],
     k: int = 5,
+    use_item_popularity: bool = False,
 ) -> float:
     df = train_test_split(load_data(data_path))
     train_df = df[~df["is_test"]]
@@ -97,7 +114,10 @@ def run_pipeline(
     train_user_items = build_user_item_map(train_df)
     test_user_items = build_user_item_map(test_df)
 
-    X, y, encoder = prepare_training_data(train_df)
+    X, y, encoder, item_popularity = prepare_training_data(
+        train_df,
+        use_item_popularity
+    )
     model = train_model(X, y)
 
     all_items = sorted(df["item_id"].unique())
@@ -109,6 +129,7 @@ def run_pipeline(
         train_user_items,
         all_items,
         k,
+        item_popularity,
     )
 
     debug_user_id = 1
@@ -118,6 +139,7 @@ def run_pipeline(
         test_user_items,
         model,
         encoder,
+        item_popularity,
         all_items,
         k,
     )

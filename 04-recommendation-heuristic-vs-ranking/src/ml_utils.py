@@ -11,6 +11,7 @@ def score_candidates(
     all_items: List[int],
     model: LogisticRegression,
     encoder: OneHotEncoder,
+    item_popularity: Dict[int, int],
 ) -> List[Tuple[int, float]]:
     """
     Returns:
@@ -25,7 +26,19 @@ def score_candidates(
         "item_id": candidates,
     })
 
-    X_encoded = encoder.transform(X_input)
+    X_cat = encoder.transform(X_input)
+
+    if item_popularity is not None:
+        pop_values = (
+            X_input["item_id"]
+            .map(item_popularity)
+            .fillna(0)
+            .values.reshape(-1, 1)
+        )
+        X_encoded = np.hstack([X_cat, pop_values])
+    else:
+        X_encoded = X_cat
+
     probs = model.predict_proba(X_encoded)[:, 1]
 
     # rank items by probability
@@ -45,7 +58,7 @@ def compute_item_popularity_feature(
     Compute item popularity feature.
 
     Returns:
-        pop_values: (n, 1) numpy array aligned with train_df rows
+        popularity_values: (n, 1) numpy array aligned with train_df rows
         item_popularity: Dict[item_id -> count]
     """
 
@@ -56,14 +69,14 @@ def compute_item_popularity_feature(
         .to_dict()
     )
 
-    pop_values = (
+    popularity_values = (
         train_df["item_id"]
         .map(item_popularity)
         .fillna(0)
         .values.reshape(-1, 1)
     )
 
-    return pop_values, item_popularity
+    return popularity_values, item_popularity
 
 
 # --- driver / debug ---
@@ -74,10 +87,10 @@ def _debug_item_popularity():
         "interaction": [1, 1, 1, 0, 0],
     })
 
-    pop_values, item_popularity = compute_item_popularity_feature(df)
+    popularity_values, item_popularity = compute_item_popularity_feature(df)
 
     print("Item popularity:", item_popularity)
-    print("Pop values:\n", pop_values)
+    print("Pop values:\n", popularity_values)
 
     assert item_popularity[10] == 2
     assert item_popularity[20] == 1
@@ -85,7 +98,7 @@ def _debug_item_popularity():
 
     # row-wise check
     expected = [2, 2, 1, 1, 0]
-    assert pop_values.flatten().tolist() == expected
+    assert popularity_values.flatten().tolist() == expected
 
     print("All tests for compute_item_popularity_feature() passed ✅")
 

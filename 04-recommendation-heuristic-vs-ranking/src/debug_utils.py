@@ -44,6 +44,7 @@ def debug_user_ml(
     test_user_items: Dict[int, Set[int]],
     model: LogisticRegression,
     encoder: OneHotEncoder,
+    item_popularity: Dict[int, int],
     all_items: List[int],
     k: int,
     top_n: int = 10,
@@ -69,7 +70,7 @@ def debug_user_ml(
     print(f"Test item: {list(test_items)}")
 
     scored_items = score_candidates(
-        user_id, seen_items, all_items, model, encoder
+        user_id, seen_items, all_items, model, encoder, item_popularity,
     )
 
     # top-N (for inspection)
