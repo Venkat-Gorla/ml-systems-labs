@@ -1,5 +1,6 @@
-from typing import List, Set, Tuple
+from typing import List, Set, Tuple, Dict
 import pandas as pd
+import numpy as np
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import OneHotEncoder
 
@@ -35,3 +36,59 @@ def score_candidates(
     )
 
     return scored_items
+
+
+def compute_item_popularity_feature(
+    train_df: pd.DataFrame,
+) -> Tuple[np.ndarray, Dict[int, int]]:
+    """
+    Compute item popularity feature.
+
+    Returns:
+        pop_values: (n, 1) numpy array aligned with train_df rows
+        item_popularity: Dict[item_id -> count]
+    """
+
+    item_popularity = (
+        train_df[train_df["interaction"] == 1]
+        .groupby("item_id")
+        .size()
+        .to_dict()
+    )
+
+    pop_values = (
+        train_df["item_id"]
+        .map(item_popularity)
+        .fillna(0)
+        .values.reshape(-1, 1)
+    )
+
+    return pop_values, item_popularity
+
+
+# --- driver / debug ---
+def _debug_item_popularity():
+    df = pd.DataFrame({
+        "user_id": [1, 2, 3, 4, 5],
+        "item_id": [10, 10, 20, 20, 30],
+        "interaction": [1, 1, 1, 0, 0],
+    })
+
+    pop_values, item_popularity = compute_item_popularity_feature(df)
+
+    print("Item popularity:", item_popularity)
+    print("Pop values:\n", pop_values)
+
+    assert item_popularity[10] == 2
+    assert item_popularity[20] == 1
+    assert item_popularity.get(30, 0) == 0
+
+    # row-wise check
+    expected = [2, 2, 1, 1, 0]
+    assert pop_values.flatten().tolist() == expected
+
+    print("All tests for compute_item_popularity_feature() passed ✅")
+
+
+if __name__ == "__main__":
+    _debug_item_popularity()
