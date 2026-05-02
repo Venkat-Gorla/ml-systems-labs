@@ -21,17 +21,19 @@
 
 ## Results
 
-| Date       | Approach  | Precision@5 | Key Insight                                                   | Commit  |
-| ---------- | --------- | ----------- | ------------------------------------------------------------- | ------- |
-| 2026-04-29 | Heuristic | 0.0175      | Strong baseline using global popularity                       | cb86dc5 |
-| 2026-04-29 | ML (V1)   | 0.0150      | Fails due to hidden structure + weak features + noise         | cb86dc5 |
-| 2026-05-01 | ML (V2)   | 0.0300      | Structured data + aligned sampling → ML outperforms heuristic | 13f253a |
+| Date       | Approach      | Precision@5 | Key Insight                                                   | Commit  |
+| ---------- | ------------- | ----------- | ------------------------------------------------------------- | ------- |
+| 2026-04-29 | Heuristic     | 0.0175      | Strong baseline using global popularity                       | cb86dc5 |
+| 2026-04-29 | ML (V1)       | 0.0150      | Fails due to hidden structure + weak features + noise         | cb86dc5 |
+| 2026-05-01 | ML (V2)       | 0.0300      | Structured data + aligned sampling → ML outperforms heuristic | 13f253a |
+| 2026-05-02 | ML (V2 + pop) | 0.0325      | Item popularity provides small but consistent lift            | 297575a |
 
 ## Repro
 
 - heuristic → `uv run src/heuristic_model.py`
 - ml (V1) → `uv run src/ml_model.py`
 - ml (V2) → `uv run src/ml_model_v2.py`
+- ml (V2 + pop) → `uv run src/ml_model_v2.py --use-popularity`
 
 ## Notes
 
