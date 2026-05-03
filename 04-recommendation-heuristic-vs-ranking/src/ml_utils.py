@@ -37,7 +37,7 @@ def score_candidates(
     expected_features = model.n_features_in_
     actual_features = X_encoded.shape[1]
 
-    assert actual_features == expected_features, (
+    assert expected_features == actual_features, (
         f"Feature mismatch: expected={expected_features}, got={actual_features}"
     )
 
