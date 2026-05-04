@@ -1,13 +1,27 @@
 from __future__ import annotations
 
+import argparse
 from data import load_data, split_data
 from model import train_model
 from evaluate import evaluate
 from experiment_logger import log_experiment
 
 
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--save",
+        action="store_true",
+        help="Persist evaluation metrics",
+    )
+
+    return parser.parse_args()
+
+
 # vegorla: consider different filename
 def main():
+    args = parse_args()
+
     X, y = load_data()
     X_train, X_test, y_train, y_test = split_data(X, y)
 
@@ -19,15 +33,15 @@ def main():
     print(f"Recall:    {recall:.4f}")
     print(f"F1 Score:  {f1:.4f}")
 
-    # vegorla: save should be command line parameter
-    log_experiment(
-        drift_type="none",
-        drift_strength=0.0,
-        features=[],
-        precision=precision,
-        recall=recall,
-        f1=f1,
-    )
+    if args.save:
+        log_experiment(
+            drift_type="none",
+            drift_strength=0.0,
+            features=[],
+            precision=precision,
+            recall=recall,
+            f1=f1,
+        )
 
 
 if __name__ == "__main__":
