@@ -3,7 +3,7 @@ from __future__ import annotations
 import argparse
 from data import load_data, split_data
 from model import train_model
-from evaluate import evaluate
+from evaluate import evaluate, print_metrics
 from experiment_logger import log_experiment
 
 
@@ -26,21 +26,19 @@ def main():
     X_train, X_test, y_train, y_test = split_data(X, y)
 
     model = train_model(X_train, y_train)
-    precision, recall, f1 = evaluate(model, X_test, y_test)
+    metrics = evaluate(model, X_test, y_test)
 
     print("\n=== Baseline Metrics ===")
-    print(f"Precision: {precision:.4f}")
-    print(f"Recall:    {recall:.4f}")
-    print(f"F1 Score:  {f1:.4f}")
+    print_metrics(metrics)
 
     if args.save:
         log_experiment(
             drift_type="none",
             drift_strength=0.0,
             features=[],
-            precision=precision,
-            recall=recall,
-            f1=f1,
+            precision=metrics["precision"],
+            recall=metrics["recall"],
+            f1=metrics["f1"],
         )
 
 
