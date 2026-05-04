@@ -4,7 +4,7 @@ import numpy as np
 
 
 def apply_feature_drift(
-    X: np.ndarray,  # vegorla: rename to X_test?
+    X: np.ndarray,
     drift_strength: float = 0.5,
     feature_indices: list[int] | None = None,
 ):
