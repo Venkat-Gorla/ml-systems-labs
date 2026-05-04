@@ -18,7 +18,6 @@ def parse_args():
     return parser.parse_args()
 
 
-# vegorla: consider different filename
 def main():
     args = parse_args()
 
