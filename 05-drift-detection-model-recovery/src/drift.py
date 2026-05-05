@@ -8,6 +8,7 @@ def apply_feature_drift(
     drift_strength: float = 0.5,
     feature_indices: list[int] | None = None,
 ):
+    # vegorla: cleanup
     if feature_indices is None:
         feature_indices = [0, 1]
 

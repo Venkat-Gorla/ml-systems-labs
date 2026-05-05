@@ -9,7 +9,7 @@ def train_model(X_train, y_train):
 
 
 def get_feature_importance(model):
-    coefficients = model.coef_[0]  # binary classification
+    coefficients = model.coef_[0]  # assuming binary classification
     importance = np.abs(coefficients)
 
     ranked_indices = np.argsort(importance)[::-1]
