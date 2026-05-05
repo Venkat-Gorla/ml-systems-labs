@@ -48,8 +48,8 @@ def main():
     feature_indices = resolve_feature_indices(args, model)
     X_test_drifted, drift_info = apply_feature_drift(
         X_test,
-        drift_strength=args.drift_strength,
         feature_indices=feature_indices,
+        drift_strength=args.drift_strength,
     )
 
     metrics = evaluate(model, X_test_drifted, y_test)
@@ -63,7 +63,7 @@ def main():
         log_experiment(
             drift_type=drift_info["drift_type"],
             drift_strength=drift_info["drift_strength"],
-            features=drift_info["features"],
+            features=feature_indices,
             precision=metrics["precision"],
             recall=metrics["recall"],
             f1=metrics["f1"],
