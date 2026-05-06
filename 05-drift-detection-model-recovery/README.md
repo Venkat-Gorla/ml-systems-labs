@@ -1,126 +1,81 @@
-# POC-5 — Detecting Data Drift & Model Degradation
+# POC-5 — Drift Detection & Model Degradation
 
 ## Problem
 
-ML models degrade silently in production due to changing data patterns.
+ML models degrade silently as data changes.
 
 > **Key question:**
-> When should we **trust the model vs retrain or intervene**?
+> When should we trust the model vs retrain?
 
-## Goal
+## Approach
 
-- Simulate **data drift scenarios**
-- Measure **impact on model performance**
-- Evaluate **drift detection strategies**
-- Define **action thresholds (when to retrain / alert)**
+- Train baseline model (Logistic Regression)
+- Simulate feature-level drift with varying strength
+- Track:
+  - Model metrics (Precision, Recall, F1)
+  - Data drift using PSI
 
-## Validation Approach
+## Key Results
 
-### Baseline
+| Drift Strength | Features | F1     | Mean PSI |
+| -------------- | -------- | ------ | -------- |
+| 0.0            | []       | 0.8136 | 0.00     |
+| 0.5            | [0,1]    | 0.8191 | 0.39     |
+| 0.5            | [3,0,5]  | 0.8265 | 0.43     |
+| 1.0            | [3,0,5]  | 0.8190 | 1.80     |
+| 2.0            | [3,0,5]  | 0.7184 | 6.03     |
 
-- Assume **static data distribution**
-- Train once, evaluate once
-- No monitoring
+## Insights
 
-**Why this matters:**
-Represents naive production setup → helps quantify hidden risk
+### 1. Drift does NOT immediately break models
 
-### ML / Advanced Approach
+- Metrics remain stable under moderate drift
+- Performance may even improve temporarily
 
-- Model: Logistic Regression (simple, interpretable)
-- Features: Standard numerical / TF-IDF (depending on dataset)
-- Monitoring:
-  - Data drift detection (distribution shift)
-  - Performance tracking over time
+### 2. PSI detects issues earlier than metrics
 
-#### Drift Simulation
+- PSI > 0.25 while F1 is still stable
+- Drift is visible before degradation
 
-Introduce controlled shifts:
+### 3. Metrics are lagging indicators
 
-- Feature distribution change (e.g., mean/variance shift)
-- Label distribution change (class imbalance)
-- Noise injection
+- Precision drops gradually
+- Recall increases (model bias shift)
+- F1 drops only under severe drift
 
-## Comparison Metrics
+### 4. Important features matter more
 
-### Model Performance
+- Drift on top features → stronger impact
 
-- Accuracy
-- Precision
-- Recall
-- F1 Score
+## Decision Framework
 
-### Drift Detection
+```text
+IF mean_psi > 0.25 → investigate
+IF mean_psi > 1.0  → high risk
+IF mean_psi > 2.0  → retrain
+```
 
-- Population Stability Index (PSI)
-- KL Divergence (optional)
-- Feature-wise distribution shift
+Combine with:
 
-### System Signals (Important)
+- Metric degradation (F1 drop)
+- Feature-level drift analysis
 
-- Prediction confidence drop
-- Error rate increase over time
+## Takeaways
 
-## Tech Stack
+- Monitor **data + model**, not just metrics
+- Drift detection is an **early warning system**
+- Retraining decisions require **multiple signals**
 
-| Category          | Tools                |
-| ----------------- | -------------------- |
-| **Language**      | Python               |
-| **Data**          | pandas, numpy        |
-| **ML**            | scikit-learn         |
-| **Evaluation**    | sklearn metrics      |
-| **Drift**         | scipy / custom PSI   |
-| **Visualization** | matplotlib / seaborn |
-| **Cloud**         | (optional) AWS S3    |
+## Scope
 
-## Results Summary
+Focused on:
 
-- Performance drops as drift increases (quantified)
-- Certain metrics fail to detect early degradation
-- Drift signals (PSI etc.) can detect issues earlier than accuracy
+- Drift simulation
+- Detection signals
+- Decision logic
 
-## Decision
+Not covered:
 
-- Define **trigger thresholds**, e.g.:
-  - PSI > 0.2 → investigate
-  - F1 drop > X% → retrain
-
-- Combine:
-  - **Performance monitoring + drift detection**
-
-- Avoid relying on accuracy alone
-
-## Expected Outcome
-
-> A clear framework for:
-
-- Detecting when models are no longer reliable
-- Deciding when to retrain or intervene
-
-## Notes
-
-### POC Focus
-
-- Simulating real-world failure modes
-- Understanding monitoring signals
-- Designing decision thresholds
-
-### Not Focused On
-
-- Advanced models
 - Production pipelines
-- Real-time systems
-
-## Reflection (Add after completion)
-
-- What failed first: metrics or drift signals?
-- Which signal was most reliable?
-- How early could degradation be detected?
-- What would you monitor in production?
-
-## 🔥 Small Upgrade (Important)
-
-Add this mindset:
-
-> This POC is not about drift detection accuracy
-> It is about **decision confidence under uncertainty**
+- Real-time monitoring
+- Advanced models
