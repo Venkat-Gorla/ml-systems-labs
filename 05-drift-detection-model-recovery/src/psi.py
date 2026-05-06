@@ -16,6 +16,14 @@ def _compute_distribution(values: np.ndarray, bins: np.ndarray) -> np.ndarray:
     return np.where(dist == 0, epsilon, dist)
 
 
+def _compute_psi_contrib(
+    expected_dist: np.ndarray,
+    actual_dist: np.ndarray,
+) -> np.ndarray:
+    """Per-bin PSI contribution."""
+    return (actual_dist - expected_dist) * np.log(actual_dist / expected_dist)
+
+
 def compute_psi(expected: np.ndarray, actual: np.ndarray, bins: int = 10) -> float:
     """Compute PSI for a single feature."""
     if bins <= 1:
@@ -32,8 +40,7 @@ def compute_psi(expected: np.ndarray, actual: np.ndarray, bins: int = 10) -> flo
     expected_dist = _compute_distribution(expected, bin_edges)
     actual_dist = _compute_distribution(actual, bin_edges)
 
-    psi = np.sum((actual_dist - expected_dist) *
-                 np.log(actual_dist / expected_dist))
+    psi = np.sum(_compute_psi_contrib(expected_dist, actual_dist))
     return float(psi)
 
 
@@ -124,8 +131,7 @@ def test_psi_bin_distribution_debug():
     exp_dist = _compute_distribution(expected, bins)
     act_dist = _compute_distribution(actual, bins)
 
-    # vegorla: formula is duplicated
-    psi_contrib = (act_dist - exp_dist) * np.log(act_dist / exp_dist)
+    psi_contrib = _compute_psi_contrib(exp_dist, act_dist)
     total_psi = np.sum(psi_contrib)
 
     print("\n=== PSI Bin Distribution Debug Test ===")
