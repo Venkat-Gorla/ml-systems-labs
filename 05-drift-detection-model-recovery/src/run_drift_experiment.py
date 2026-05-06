@@ -5,6 +5,7 @@ import argparse
 from data import load_data, split_data
 from model import train_model, get_feature_importance
 from drift import apply_feature_drift
+from psi import compute_feature_psi
 from evaluate import evaluate, print_metrics
 from experiment_logger import log_experiment
 
@@ -52,12 +53,22 @@ def main():
         drift_strength=args.drift_strength,
     )
 
+    psi_result = compute_feature_psi(
+        X_expected=X_test,
+        X_actual=X_test_drifted,
+        feature_indices=feature_indices,
+    )
+
     metrics = evaluate(model, X_test_drifted, y_test)
 
     print("\n=== Drift Experiment ===")
     print(f"Drift strength: {args.drift_strength}")
     print(f"Features: {feature_indices}")
     print_metrics(metrics)
+
+    print("\n=== PSI ===")
+    print(f"Mean PSI: {psi_result['mean_psi']:.4f}")
+    print(f"Max PSI:  {psi_result['max_psi']:.4f}")
 
     if args.save:
         log_experiment(
@@ -67,6 +78,8 @@ def main():
             precision=metrics["precision"],
             recall=metrics["recall"],
             f1=metrics["f1"],
+            mean_psi=psi_result["mean_psi"],
+            max_psi=psi_result["max_psi"],
         )
 
 

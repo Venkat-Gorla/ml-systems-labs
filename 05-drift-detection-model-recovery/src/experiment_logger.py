@@ -14,6 +14,8 @@ def log_experiment(
     precision: float,
     recall: float,
     f1: float,
+    mean_psi: float = 0,
+    max_psi: float = 0,
 ):
     os.makedirs("docs", exist_ok=True)  # ensure folder exists
 
@@ -32,6 +34,8 @@ def log_experiment(
                     "precision",
                     "recall",
                     "f1",
+                    "mean_psi",
+                    "max_psi",
                 ]
             )
 
@@ -44,5 +48,7 @@ def log_experiment(
                 round(precision, 4),
                 round(recall, 4),
                 round(f1, 4),
+                round(mean_psi, 4),
+                round(max_psi, 4),
             ]
         )
