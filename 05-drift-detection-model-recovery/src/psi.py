@@ -97,6 +97,21 @@ def test_psi_detects_distribution_shift() -> None:
     print_psi_result(result)
 
 
+def _print_psi_bins(
+    bins: np.ndarray,
+    exp_dist: np.ndarray,
+    act_dist: np.ndarray,
+):
+    for i in range(len(bins) - 1):
+        delta = act_dist[i] - exp_dist[i]
+        print(
+            f"[{bins[i]:>6.2f}, {bins[i+1]:>6.2f}] | "
+            f"exp={exp_dist[i]:>7.4f}  "
+            f"act={act_dist[i]:>7.4f}  "
+            f"delta={delta:>+8.4f}"
+        )
+
+
 def test_psi_bin_distribution_debug():
     np.random.seed(42)
 
@@ -114,16 +129,7 @@ def test_psi_bin_distribution_debug():
     total_psi = np.sum(psi_contrib)
 
     print("\n=== PSI Bin Distribution Debug Test ===")
-    # vegorla: small function for print table
-    for i in range(len(bins) - 1):
-        delta = act_dist[i] - exp_dist[i]
-        print(
-            f"[{bins[i]:>6.2f}, {bins[i+1]:>6.2f}] | "
-            f"exp={exp_dist[i]:>7.4f}  "
-            f"act={act_dist[i]:>7.4f}  "
-            f"delta={delta:>+8.4f}"
-        )
-
+    _print_psi_bins(bins, exp_dist, act_dist)
     print(f"\nTotal PSI: {total_psi:.4f}")
 
 
