@@ -93,9 +93,40 @@ def test_psi_detects_distribution_shift() -> None:
     assert result["mean_psi"] > baseline["mean_psi"] + 0.05, \
         "PSI too low → drift not detected"
 
-    print("\n=== Drift Detection Test ===")
+    print("\n=== PSI Drift Detection Test ===")
     print_psi_result(result)
+
+
+def test_psi_bin_distribution_debug():
+    np.random.seed(42)
+
+    n = 1000
+
+    expected = np.random.normal(0, 1, n)
+    actual = np.random.normal(0.3, 1.2, n)
+
+    bins = _compute_bins(expected, bins=5)
+    exp_dist = _compute_distribution(expected, bins)
+    act_dist = _compute_distribution(actual, bins)
+
+    # vegorla: formula is duplicated
+    psi_contrib = (act_dist - exp_dist) * np.log(act_dist / exp_dist)
+    total_psi = np.sum(psi_contrib)
+
+    print("\n=== PSI Bin Distribution Debug Test ===")
+    # vegorla: small function for print table
+    for i in range(len(bins) - 1):
+        delta = act_dist[i] - exp_dist[i]
+        print(
+            f"[{bins[i]:>6.2f}, {bins[i+1]:>6.2f}] | "
+            f"exp={exp_dist[i]:>7.4f}  "
+            f"act={act_dist[i]:>7.4f}  "
+            f"delta={delta:>+8.4f}"
+        )
+
+    print(f"\nTotal PSI: {total_psi:.4f}")
 
 
 if __name__ == "__main__":
     test_psi_detects_distribution_shift()
+    test_psi_bin_distribution_debug()
