@@ -61,13 +61,7 @@ Detect fraudulent transactions where:
 - Cost-based evaluation drives the final decision
 
 **Conclusion:**
-Metric selection must align with business cost, not accuracy
-
-## Expected Outcome
-
-> A clear understanding that:
->
-> **“The best model is not the one with highest accuracy, but the one that minimizes real-world cost.”**
+The best model is not the one with highest accuracy, but the one that minimizes real-world cost
 
 ## Notes
 
