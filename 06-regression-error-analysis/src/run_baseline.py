@@ -27,7 +27,12 @@ def parse_args():
     return parser.parse_args()
 
 
-def run_outlier_experiment(y_test, y_pred, noise):
+def run_outlier_experiment(
+    y_test,
+    y_pred,
+    noise: float,
+    save: bool,
+) -> None:
     y_test_outlier, outlier_indices = inject_outliers(
         y_test,
         n_outliers=5,
@@ -40,6 +45,14 @@ def run_outlier_experiment(y_test, y_pred, noise):
     print("Injected outlier indices:", outlier_indices)
     print(f"Noise: {noise}")
     print_metrics(metrics)
+
+    if save:
+        log_experiment(
+            experiment_type="outlier_injection",
+            noise=noise,
+            mae=metrics["mae"],
+            rmse=metrics["rmse"],
+        )
 
 
 def main():
@@ -57,7 +70,12 @@ def main():
     print(f"Noise: {args.noise}")
     print_metrics(metrics)
 
-    run_outlier_experiment(y_test=y_test, y_pred=y_pred, noise=args.noise)
+    run_outlier_experiment(
+        y_test=y_test,
+        y_pred=y_pred,
+        noise=args.noise,
+        save=args.save
+    )
 
     if args.save:
         log_experiment(
