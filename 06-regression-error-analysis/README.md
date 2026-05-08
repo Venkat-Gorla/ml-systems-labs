@@ -5,49 +5,79 @@
 Regression models predict continuous values.
 
 > **Key question:**
-> How do regression error metrics behave under different conditions?
+> How do regression error metrics behave under different failure scenarios?
 
-## Goal (MVP)
+## Goal
 
-- Build a simple regression model
-- Understand basic error metrics:
-  - MAE (Mean Absolute Error)
-  - RMSE (Root Mean Squared Error)
+- Build a simple regression pipeline
+- Understand regression error metrics:
+  - **MAE**
+  - **RMSE**
+- Analyze metric behavior under:
+  - increasing noise
+  - extreme outliers
+
+This POC focuses on regression metric behavior under controlled experimental conditions.
 
 ## Approach
 
 - Generate synthetic regression data
 - Train Linear Regression model
-- Evaluate predictions using MAE and RMSE
+- Evaluate predictions using:
+  - MAE (Mean Absolute Error)
+  - RMSE (Root Mean Squared Error)
 
-## Metrics
+## Experiments
 
-- **MAE** → average absolute error
-- **RMSE** → penalizes large errors more
+### 1. Baseline
 
-## Expected Outcome
+Train and evaluate regression model on normal data.
 
-- Working regression pipeline
-- Clear understanding of:
-  - What prediction error means
-  - Difference between MAE and RMSE
-  - How metrics behave differently under various scenarios
+Baseline result:
 
-## Scope (MVP)
+| Noise |    MAE |    RMSE |
+| ----- | -----: | ------: |
+| 10    | 8.5351 | 10.5312 |
 
-Focused on:
+### 2. Noise Increase
 
-- Basic regression pipeline
-- Metric understanding
+Increase dataset noise and observe metric degradation.
 
-Not covered:
+| Noise |     MAE |    RMSE |
+| ----- | ------: | ------: |
+| 10    |  8.5351 | 10.5312 |
+| 30    | 25.6053 | 31.5936 |
+| 60    | 51.2106 | 63.1872 |
 
-- Advanced models
-- Feature engineering
-- Real-world datasets
+Observation:
 
-## Next Steps (Later)
+- Both MAE and RMSE increased steadily as noise increased
+- **RMSE** consistently increased more aggressively
 
-- Add outliers → compare MAE vs RMSE
-- Add noise → observe stability
-- Introduce distribution shift
+### 3. Outlier Injection
+
+Inject extreme target values into evaluation data.
+
+| Experiment        |     MAE |    RMSE |
+| ----------------- | ------: | ------: |
+| Baseline          |  8.5351 | 10.5312 |
+| Outlier Injection | 15.9425 | 57.7480 |
+
+Observation:
+
+- MAE increased moderately
+- RMSE increased dramatically
+- **RMSE** is highly sensitive to rare extreme prediction failures
+
+## Key Learnings
+
+- **MAE** measures average prediction error linearly
+- **RMSE** penalizes large errors more aggressively
+- Noise causes gradual degradation
+- Outliers disproportionately affect RMSE
+
+## Conclusion
+
+This POC demonstrated how regression metrics behave under controlled failure scenarios.
+
+The most important insight was that **RMSE reacts much more strongly to extreme prediction errors than MAE**, making it useful for detecting catastrophic regression failures.
