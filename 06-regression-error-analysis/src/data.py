@@ -4,11 +4,11 @@ from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split
 
 
-def load_data():
+def load_data(noise: float = 10):
     X, y = make_regression(
         n_samples=1000,
         n_features=5,
-        noise=10,
+        noise=noise,
         random_state=42,
     )
 
