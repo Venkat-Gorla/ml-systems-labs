@@ -55,12 +55,6 @@ Detect unusual data points without labels and build intuition for how anomaly de
 - Scores provide more reliable insight than labels
 - Visualization confirms model behavior effectively
 
-## Scope
-
-- Short POC (1–2 days)
-- Focus on clarity and intuition
-- No hyperparameter tuning or production optimization
-
 ## Next Steps
 
 - Compare with alternative methods (e.g., DBSCAN, LOF)

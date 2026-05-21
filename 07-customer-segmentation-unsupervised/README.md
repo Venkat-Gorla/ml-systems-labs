@@ -54,9 +54,3 @@ Identify natural customer segments and validate them through simple visualizatio
 - Processed dataset with cluster labels
 - PCA visualization (2D scatter plot)
 - Notebook for exploratory analysis
-
-## Scope
-
-- Short POC (1–2 days)
-- Focus on clarity and intuition
-- No production considerations
