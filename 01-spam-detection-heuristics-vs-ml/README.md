@@ -53,16 +53,3 @@ This POC focuses on:
 A clear, reasoned answer to:
 
 > **Is ML justified for this problem, or are heuristics sufficient?**
-
-## Notes
-
-This is a **POC (Proof of Concept)** focused on:
-
-- Fast iteration
-- Decision-making
-- Learning through comparison
-
-Not focused on:
-
-- Model optimization
-- Production readiness

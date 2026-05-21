@@ -62,18 +62,3 @@ Detect fraudulent transactions where:
 
 **Conclusion:**
 The best model is not the one with highest accuracy, but the one that minimizes real-world cost
-
-## Notes
-
-POC focus:
-
-- Fast iteration
-- Metric comparison
-- Threshold tuning
-- Cost-based decisions
-
-Not covered:
-
-- Complex models
-- Feature engineering
-- Production systems

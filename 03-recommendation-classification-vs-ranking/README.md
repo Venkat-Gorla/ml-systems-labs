@@ -60,16 +60,3 @@ Recommend relevant items to users.
 ## Conclusion
 
 > **Recommendation systems should use ranking, but success depends on meaningful features.**
-
-## Notes
-
-Focus:
-
-- Problem framing
-- Evaluation differences
-
-Not covered:
-
-- Feature engineering
-- Advanced models
-- Production systems
