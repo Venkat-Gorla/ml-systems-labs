@@ -1,4 +1,4 @@
-# 05 — Customer Segmentation (Unsupervised Learning)
+# 07 — Customer Segmentation (Unsupervised Learning)
 
 ## Problem
 

@@ -1,4 +1,4 @@
-# 06 — Anomaly Detection (Unsupervised Learning)
+# 08 — Anomaly Detection (Unsupervised Learning)
 
 ## Problem
 
