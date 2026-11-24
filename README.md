@@ -2,8 +2,6 @@
 
 This repository is a collection of focused machine learning explorations built with an **engineering-first, decision-driven** mindset.
 
-The goal is not to showcase models in isolation, but to understand **how and when ML techniques work in practice**—where data, evaluation, and trade-offs shape outcomes as much as algorithms.
-
 ## Motivation
 
 This repo reflects a deliberate effort to:
